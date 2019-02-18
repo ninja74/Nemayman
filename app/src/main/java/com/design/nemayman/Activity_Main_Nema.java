@@ -66,6 +66,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
     private TextView txtDateFromFilter;
     private TagGroup tagGroupFilter;
     private List<ModPosts> modPostsCategory;
+    private String Txtsearch = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +99,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         try {
-            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page);
+            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
 
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
@@ -130,7 +131,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                             if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
                                 isScrolling = false;
                                 page++;
-                                ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page);
+                                ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
                                 conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                     @Override
                                     public void onPostResponse(List<ModPosts> response) {
@@ -143,6 +144,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
                                     }
                                 });
+
+                                Toast.makeText(Activity_Main_Nema.this, page+"", Toast.LENGTH_SHORT).show();
+
 
                             }
 
@@ -237,6 +241,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         txtDeleteFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Txtsearch = "";
                 String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
                 setDataOnRec(url);
                 txtDateFromFilter.setText(getString(R.string.txtDateFrom));
@@ -308,14 +313,14 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
 
-                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=1";
+                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
 
                 if (!TimeAfterFilter.equals(""))
-                    url += "&&after=" + TimeAfterFilter;
+                    Txtsearch += "&&after=" + TimeAfterFilter;
                 if (!TimeBeforFilter.equals(""))
-                    url += "&&before=" + TimeBeforFilter;
+                    Txtsearch += "&&before=" + TimeBeforFilter;
                 if (!CategoryFilter.equals(""))
-                    url += "&&categories=" + CategoryFilter;
+                    Txtsearch += "&&categories=" + CategoryFilter;
 
                 page = 1;
                 setDataOnRec(url);
