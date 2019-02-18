@@ -313,6 +313,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
 
+                Txtsearch = "";
                 String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
 
                 if (!TimeAfterFilter.equals(""))
@@ -325,6 +326,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                 page = 1;
                 setDataOnRec(url);
                 alertDialogFilters.dismiss();
+                Toast.makeText(Activity_Main_Nema.this, url+page+""+Txtsearch, Toast.LENGTH_SHORT).show();
             }
         });
 
