@@ -56,7 +56,7 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
 
 // img
-        Glide.with(context).load(posts.get(i).imgPostMedium)
+        Glide.with(context).load(posts.get(i).imgPostThumbnail)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher_round)
                 .into(myViewHolder.imgThumb);

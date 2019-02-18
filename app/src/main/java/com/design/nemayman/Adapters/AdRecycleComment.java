@@ -62,7 +62,6 @@ public class AdRecycleComment extends RecyclerView.Adapter<AdRecycleComment.myVi
         public HtmlTextView txtCommnet;
         public TextView txtNameComment;
         public CircleImageView imgThumbComment;
-        public CardView cardView2;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);

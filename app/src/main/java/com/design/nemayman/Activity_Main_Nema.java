@@ -104,8 +104,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                 @Override
                 public void onPostResponse(List<ModPosts> response) {
 
-                    Toast.makeText(Activity_Main_Nema.this, response.size() + "", Toast.LENGTH_SHORT).show();
-
                     for (int i = 0; i < response.size(); i++) {
                         data.add(response.get(i));
                     }
@@ -137,12 +135,10 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                                     @Override
                                     public void onPostResponse(List<ModPosts> response) {
 
-                                        Toast.makeText(Activity_Main_Nema.this, page + "", Toast.LENGTH_SHORT).show();
-
-//                                        for (int i = 0; i < response.size(); i++) {
-//                                            data.add(response.get(i));
-//                                        }
-//                                        postsAdapter.notifyDataSetChanged();
+                                        for (int i = 0; i < response.size(); i++) {
+                                            data.add(response.get(i));
+                                        }
+                                        postsAdapter.notifyDataSetChanged();
 
 
                                     }
@@ -312,7 +308,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
 
-                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=5&&page=1";
+                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=1";
 
                 if (!TimeAfterFilter.equals(""))
                     url += "&&after=" + TimeAfterFilter;
@@ -321,8 +317,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                 if (!CategoryFilter.equals(""))
                     url += "&&categories=" + CategoryFilter;
 
-                data.clear();
-                postsAdapter.notifyDataSetChanged();
                 page = 1;
                 setDataOnRec(url);
                 alertDialogFilters.dismiss();
