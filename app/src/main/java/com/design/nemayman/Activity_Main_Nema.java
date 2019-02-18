@@ -1,9 +1,9 @@
 package com.design.nemayman;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,31 +17,55 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AbsListView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.design.nemayman.Adapters.AdRecyclePosts;
 import com.design.nemayman.Connects.ConPosts;
 import com.design.nemayman.Models.ModPosts;
+import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
+import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
+import io.github.meness.Library.Utils.Utility;
 
-public class Activity_Main_Nema extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class Activity_Main_Nema extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
-    DrawerLayout drawer;
-    NavigationView navigationView;
-    RecyclerView recyclerPosts;
-    Toolbar toolbar;
-    LinearLayoutManager manager;
-    AdRecyclePosts postsAdapter;
-    List<ModPosts> data;
-    Boolean isScrolling = false;
-    int currentItem, totalItems, scrollOutItems;
-    String url;
-    int page = 1;
+    private DrawerLayout drawer;
+    private NavigationView navigationView;
+    private RecyclerView recyclerPosts;
+    private Toolbar toolbar;
+    private LinearLayoutManager manager;
+    private AdRecyclePosts postsAdapter;
+    private List<ModPosts> data;
+    private Boolean isScrolling = false;
+    private int currentItem, totalItems, scrollOutItems;
+    private int page = 1;
+    private String url = "";
+
+    private AlertDialog alertDialogFilters;
+    private String reqDate = "";
+    private String TimeBeforFilter = "";
+    private String TimeAfterFilter = "";
+    private String CategoryFilter = "";
+    private TextView txtDateToFilter;
+    private TextView txtDateFromFilter;
+    private TagGroup tagGroupFilter;
+    private List<ModPosts> modPostsCategory;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,13 +86,14 @@ public class Activity_Main_Nema extends AppCompatActivity
 
 
         // set Data on Recycler
-        setDataOnRec();
+        String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+        setDataOnRec(url);
 
     }
 
-    private void setDataOnRec() {
+    private void setDataOnRec(final String urlMethod) {
+        url = urlMethod;
 
-        url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -78,6 +103,8 @@ public class Activity_Main_Nema extends AppCompatActivity
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(List<ModPosts> response) {
+
+                    Toast.makeText(Activity_Main_Nema.this, response.size() + "", Toast.LENGTH_SHORT).show();
 
                     for (int i = 0; i < response.size(); i++) {
                         data.add(response.get(i));
@@ -110,7 +137,7 @@ public class Activity_Main_Nema extends AppCompatActivity
                                     @Override
                                     public void onPostResponse(List<ModPosts> response) {
 
-                                        Toast.makeText(Activity_Main_Nema.this, page+"", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(Activity_Main_Nema.this, page + "", Toast.LENGTH_SHORT).show();
 
 //                                        for (int i = 0; i < response.size(); i++) {
 //                                            data.add(response.get(i));
@@ -164,12 +191,218 @@ public class Activity_Main_Nema extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.actionSearch) {
+
+            Intent intent = new Intent(Activity_Main_Nema.this, Activity_Search_Nema.class);
+            startActivity(intent);
+
+            return true;
+        } else if (id == R.id.actionFilter) {
+
+
+            AlertDialogFilter();
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+// Start AlertDialogFilter
+
+    private void AlertDialogFilter() {
+
+
+        AlertDialog.Builder builderFilter = new AlertDialog.Builder(Activity_Main_Nema.this);
+        LinearLayout layoutFilter = (LinearLayout) getLayoutInflater().inflate(R.layout.item_filter, null, false);
+
+        final TextView txtCategoriesFilter = layoutFilter.findViewById(R.id.txtCategoriesFilter);
+        TextView txtDeleteFilter = layoutFilter.findViewById(R.id.txtDeleteFilter);
+        TextView txtDismissFilter = layoutFilter.findViewById(R.id.txtDismissFilter);
+        TextView txtDoFilter = layoutFilter.findViewById(R.id.txtDoFilter);
+
+        txtDateToFilter = layoutFilter.findViewById(R.id.txtDateToFilter);
+        txtDateFromFilter = layoutFilter.findViewById(R.id.txtDateFromFilter);
+
+        tagGroupFilter = layoutFilter.findViewById(R.id.tagGroupFilter);
+
+
+// txt dismiss
+        txtDismissFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialogFilters.dismiss();
+            }
+        });
+
+// txt Delete
+        txtDeleteFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+                setDataOnRec(url);
+                txtDateFromFilter.setText(getString(R.string.txtDateFrom));
+                txtDateToFilter.setText(getString(R.string.txtDateTo));
+                alertDialogFilters.dismiss();
+            }
+        });
+
+// txtDate From
+        txtDateFromFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersianCalendar persianCalendar = new PersianCalendar();
+                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                        Activity_Main_Nema.this,
+                        persianCalendar.getPersianYear(),
+                        persianCalendar.getPersianMonth(),
+                        persianCalendar.getPersianDay()
+                );
+                datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+//                datePickerDialog.setThemeDark(true);
+                reqDate = "txtDateFrom";
+            }
+        });
+
+// txtDate To
+        txtDateToFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PersianCalendar persianCalendar = new PersianCalendar();
+                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                        Activity_Main_Nema.this,
+                        persianCalendar.getPersianYear(),
+                        persianCalendar.getPersianMonth(),
+                        persianCalendar.getPersianDay()
+                );
+                datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+//                datePickerDialog.setThemeDark(true);
+                reqDate = "txtDateTo";
+            }
+        });
+
+// tagGP
+
+        String urlCategory = "http://nemayman.com/wp-json/wp/v2/categories?per_page=100";
+
+        RequestQueue queue = Volley.newRequestQueue(this);
+        StringRequest request = new StringRequest(Request.Method.GET, urlCategory, new OkResListenerImg(), new ErrListenerImg());
+        queue.add(request);
+
+        tagGroupFilter.setOnTagClickListener(new TagGroup.OnTagClickListener() {
+            @Override
+            public void onTagClick(String s) {
+
+                txtCategoriesFilter.setText(getString(R.string.txtCategories) + " " + s);
+
+                for (int y = 0; y < modPostsCategory.size(); y++) {
+                    if (modPostsCategory.get(y).nameCategoryFilter.equals(s)) {
+                        CategoryFilter = modPostsCategory.get(y).idCategoryFilter + "";
+                        break;
+                    }
+                }
+
+            }
+        });
+
+// txt Do filter
+        txtDoFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=5&&page=1";
+
+                if (!TimeAfterFilter.equals(""))
+                    url += "&&after=" + TimeAfterFilter;
+                if (!TimeBeforFilter.equals(""))
+                    url += "&&before=" + TimeBeforFilter;
+                if (!CategoryFilter.equals(""))
+                    url += "&&categories=" + CategoryFilter;
+
+                data.clear();
+                postsAdapter.notifyDataSetChanged();
+                page = 1;
+                setDataOnRec(url);
+                alertDialogFilters.dismiss();
+            }
+        });
+
+
+        builderFilter.setView(layoutFilter);
+        alertDialogFilters = builderFilter.create();
+        alertDialogFilters.show();
+
+
+    }
+
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+        String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
+        String symbol = "-";
+
+        if (reqDate.equals("txtDateFrom")) {
+            TimeAfterFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
+            txtDateFromFilter.setText(getString(R.string.txtDateFrom) + " " + date);
+        } else {
+            TimeBeforFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
+            txtDateToFilter.setText(getString(R.string.txtDateTo) + " " + date);
+        }
+
+
+    }
+
+    private class OkResListenerImg implements Response.Listener {
+        @Override
+        public void onResponse(Object response) {
+            JsonGetCategory(response.toString());
+        }
+    }
+
+    private class ErrListenerImg implements Response.ErrorListener {
+        @Override
+        public void onErrorResponse(VolleyError error) {
+            Toast.makeText(Activity_Main_Nema.this, "Error", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void JsonGetCategory(String result) {
+
+        modPostsCategory = new ArrayList<>();
+        try {
+
+            JSONArray jsonArray = new JSONArray(result);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject object = jsonArray.getJSONObject(i);
+
+                int id = object.getInt("id");
+                String category = object.getString("name");
+
+                ModPosts modPosts = new ModPosts();
+                modPosts.idCategoryFilter = id;
+                modPosts.nameCategoryFilter = category;
+
+                modPostsCategory.add(modPosts);
+            }
+
+            List<String> listTagGP = new ArrayList<>();
+
+            for (int j = 0; j < modPostsCategory.size(); j++)
+                listTagGP.add(modPostsCategory.get(j).nameCategoryFilter);
+
+
+            tagGroupFilter.setTags(null, listTagGP);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+// End AlertDialogFilter
+
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -198,4 +431,6 @@ public class Activity_Main_Nema extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }

@@ -21,7 +21,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity_Details_Nema"></activity>
+        <activity android:name=".Activity_Details_Nema" />
+        <activity android:name=".Activity_Search_Nema" />
     </application>
 
 </manifest>

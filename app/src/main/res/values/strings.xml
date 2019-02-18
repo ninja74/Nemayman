@@ -18,12 +18,20 @@
     <string name="navAboutUs">درباره ی نمای من</string>
     <string name="navContactUs">تماس با ما</string>
 
-    <!-- item_recyc -->
     <string name="txtTitle">عنوان</string>
     <string name="txtDec">متن</string>
     <string name="txtCategory">کتگوری</string>
     <string name="btnComment">کامنت</string>
     <string name="user">کاربر</string>
+
+    <string name="txtDateFrom">از تاریخ:</string>
+    <string name="txtDateTo">تا تاریخ:</string>
+    <string name="txtDoFilter">اعمال تغییرات</string>
+    <string name="txtDeleteFilter">حذف فیلتر</string>
+    <string name="txtDismiss">بستن</string>
+    <string name="txtFilter">فیلتر کردن</string>
+    <string name="txtCategories">دسته بندی ها:</string>
+    <string name="txtDate">تاریخ</string>
 
 
 </resources>

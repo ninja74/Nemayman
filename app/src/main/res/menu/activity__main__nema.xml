@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/actionFilter"
         android:orderInCategory="100"
         android:title="@string/navFilter"
         android:icon="@mipmap/ic_launcher"
         app:showAsAction="always" />
     <item
-        android:id="@+id/action_settings2"
+        android:id="@+id/actionSearch"
         android:orderInCategory="100"
         android:title="@string/navSearch"
         android:icon="@mipmap/ic_launcher_round"

@@ -12,12 +12,14 @@ public class ModPosts {
     public String imgPostThumbnail;
     public String imgPostMedium;
     public String postImgFullUrl;
-    public int idCategory;
     public String category;
 
     public String commentTxt;
     public String commentAuthorName;
     public String commentAuthorAvatarUrls;
+
+    public int idCategoryFilter;
+    public String nameCategoryFilter;
 
 
 }
