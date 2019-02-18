@@ -24,12 +24,12 @@ import io.github.meness.Library.HtmlTextView.HtmlTextView;
 public class Activity_Details_Nema extends AppCompatActivity {
 
 
-    String idPost = "", txtTitle = "", txtDec = "", urlImg = "";
-    TextView txtTitleDetails;
-    Button btnCommentDetails;
-    HtmlTextView txtDecDetails;
-    ImageView imgTitleDetails;
-    RecyclerView recyclerView;
+    private String idPost = "", txtTitle = "", txtDec = "", urlImg = "";
+    private TextView txtTitleDetails;
+    private Button btnCommentDetails;
+    private HtmlTextView txtDecDetails;
+    private ImageView imgTitleDetails;
+    private RecyclerView recyclerView;
 
 
     @Override

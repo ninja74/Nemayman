@@ -74,7 +74,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
     private TagGroup tagGroupFilter;
     private List<ModPosts> modPostsCategory;
     private String Txtsearch = "";
-    private Boolean booldateBefor = false, booldateAfter = false;
 
 
     @Override
@@ -166,56 +165,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         }
 
     }
-
-    private void findViews() {
-        recyclerPosts = findViewById(R.id.recyclerPosts);
-        navigationView = findViewById(R.id.nav_view);
-        drawer = findViewById(R.id.drawer_layout);
-        toolbar = findViewById(R.id.toolbar);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.activity__main__nema, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.actionSearch) {
-
-            Intent intent = new Intent(Activity_Main_Nema.this, Activity_Search_Nema.class);
-            startActivity(intent);
-
-            return true;
-        } else if (id == R.id.actionFilter) {
-
-
-            AlertDialogFilter();
-
-
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
 // Start AlertDialogFilter
 
@@ -373,9 +322,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
     }
 
-
-
-
     private class OkResListenerImg implements Response.Listener {
         @Override
         public void onResponse(Object response) {
@@ -439,7 +385,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
 // End AlertDialogFilter
 
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -468,5 +413,53 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         return true;
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.activity__main__nema, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.actionSearch) {
+
+            Intent intent = new Intent(Activity_Main_Nema.this, Activity_Search_Nema.class);
+            startActivity(intent);
+
+            return true;
+        } else if (id == R.id.actionFilter) {
+
+
+            AlertDialogFilter();
+
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void findViews() {
+        recyclerPosts = findViewById(R.id.recyclerPosts);
+        navigationView = findViewById(R.id.nav_view);
+        drawer = findViewById(R.id.drawer_layout);
+        toolbar = findViewById(R.id.toolbar);
+    }
 
 }

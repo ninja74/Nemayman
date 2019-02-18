@@ -61,10 +61,8 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
                 .error(R.mipmap.ic_launcher_round)
                 .into(myViewHolder.imgThumb);
 
-
 // category
         myViewHolder.txtCategory.setText(posts.get(i).category);
-
 
 // click
 
