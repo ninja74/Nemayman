@@ -1,32 +1,47 @@
 package com.design.nemayman;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.design.nemayman.Adapters.AdRecyclePosts;
 import com.design.nemayman.Connects.ConComment;
 import com.design.nemayman.Connects.ConPosts;
+import com.design.nemayman.Models.ModPosts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Activity_Search_Nema extends AppCompatActivity {
 
-    EditText edtSearch;
-    ImageView imgClear;
-    ImageView imgBack;
-    RecyclerView recyclerSearch;
+    private EditText edtSearch;
+    private ImageView imgClear;
+    private ImageView imgBack;
+    private RecyclerView recyclerSearch;
+    private LinearLayoutManager manager;
+    private AdRecyclePosts postsAdapter;
+    private List<ModPosts> data;
+    private Boolean isScrolling = false;
+    private int currentItem, totalItems, scrollOutItems;
+    private int page = 1;
+    private String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+    private String txtToSearch = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,18 +86,10 @@ public class Activity_Search_Nema extends AppCompatActivity {
                         manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                     }
 
-
-                    String url = "http://nemayman.com/wp-json/wp/v2/posts?per_page=10&&page=1&&_embed&&search="+edtSearch.getText().toString();
-
-
-
-// -----------------------------------------------------------------------
-
-
+                    txtToSearch = "&&search=" + edtSearch.getText().toString();
+                    setDataOnRec();
                     return true;
                 }
-
-
                 return false;
             }
         });
@@ -103,12 +110,6 @@ public class Activity_Search_Nema extends AppCompatActivity {
         });
 
 
-
-
-
-
-
-
     }
 
     private void defaults() {
@@ -123,4 +124,67 @@ public class Activity_Search_Nema extends AppCompatActivity {
         recyclerSearch = findViewById(R.id.recyclerSearch);
 
     }
+
+    private void setDataOnRec() {
+
+
+        data = new ArrayList<>();
+        manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+
+        try {
+            ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
+
+            conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                @Override
+                public void onPostResponse(List<ModPosts> response) {
+
+                    for (int i = 0; i < response.size(); i++) {
+                        data.add(response.get(i));
+                    }
+
+                    postsAdapter = new AdRecyclePosts(Activity_Search_Nema.this, data);
+                    recyclerSearch.setAdapter(postsAdapter);
+                    recyclerSearch.setLayoutManager(manager);
+                    recyclerSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                        @Override
+                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                            super.onScrollStateChanged(recyclerView, newState);
+                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                isScrolling = true;
+                            }
+                        }
+
+                        @Override
+                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                            super.onScrolled(recyclerView, dx, dy);
+                            currentItem = manager.getChildCount();
+                            totalItems = manager.getItemCount();
+                            scrollOutItems = manager.findFirstVisibleItemPosition();
+
+                            if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
+                                isScrolling = false;
+                                page++;
+                                ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
+                                conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                                    @Override
+                                    public void onPostResponse(List<ModPosts> response) {
+
+                                        for (int i = 0; i < response.size(); i++) {
+                                            data.add(response.get(i));
+                                        }
+                                        postsAdapter.notifyDataSetChanged();
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        } catch (Exception e) {
+            Log.e("err", e.getMessage());
+        }
+
+    }
+
+
 }
