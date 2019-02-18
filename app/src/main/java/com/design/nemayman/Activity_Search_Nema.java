@@ -136,7 +136,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
-                public void onPostResponse(List<ModPosts> response) {
+                public void onPostResponse(final List<ModPosts> response) {
 
                     for (int i = 0; i < response.size(); i++) {
                         data.add(response.get(i));
@@ -161,7 +161,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                             totalItems = manager.getItemCount();
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
-                            if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
+                            if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                 isScrolling = false;
                                 page++;
                                 ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);

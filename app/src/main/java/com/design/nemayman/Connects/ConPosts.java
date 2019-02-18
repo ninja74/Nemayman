@@ -2,19 +2,30 @@ package com.design.nemayman.Connects;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.NoConnectionError;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.design.nemayman.Models.ModPosts;
+import com.design.nemayman.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,17 +51,41 @@ public class ConPosts {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        onPostResponse.onPostResponse(ParsingPostJSON(response));
+
+                        if (!(response.length() == 0 && response == null))
+                            onPostResponse.onPostResponse(ParsingPostJSON(response));
+
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("errAppWp", error.getMessage());
+//                Log.e("errAppWp", error.getMessage());
+
+
+
+                NetworkResponse response = error.networkResponse;
+                if (error instanceof ServerError && response != null) {
+                    try {
+                        String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                        // Now you can use any deserializer to make sense of data
+                        JSONObject obj = new JSONObject(res);
+                    } catch (UnsupportedEncodingException e1) {
+                        // Couldn't properly decode data to string
+                        e1.printStackTrace();
+                    } catch (JSONException e2) {
+                        // returned data is not JSONObject?
+                        e2.printStackTrace();
+                    }
+                }
+
+
+
             }
         });
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(request);
+
     }
 
 

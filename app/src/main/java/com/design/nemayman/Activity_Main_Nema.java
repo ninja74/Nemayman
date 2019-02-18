@@ -21,10 +21,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.ServerError;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.design.nemayman.Adapters.AdRecyclePosts;
@@ -34,8 +37,10 @@ import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
 import com.mohamadamin.persianmaterialdatetimepicker.utils.PersianCalendar;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,6 +99,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
+        page = 1;
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -103,7 +109,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
-                public void onPostResponse(List<ModPosts> response) {
+                public void onPostResponse(final List<ModPosts> response) {
 
                     for (int i = 0; i < response.size(); i++) {
                         data.add(response.get(i));
@@ -128,7 +134,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                             totalItems = manager.getItemCount();
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
-                            if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
+                            if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                 isScrolling = false;
                                 page++;
                                 ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
@@ -144,9 +150,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
                                     }
                                 });
-
-                                Toast.makeText(Activity_Main_Nema.this, page+"", Toast.LENGTH_SHORT).show();
-
 
                             }
 
@@ -323,10 +326,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                 if (!CategoryFilter.equals(""))
                     Txtsearch += "&&categories=" + CategoryFilter;
 
-                page = 1;
                 setDataOnRec(url);
                 alertDialogFilters.dismiss();
-                Toast.makeText(Activity_Main_Nema.this, url+page+""+Txtsearch, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -365,8 +366,21 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
     private class ErrListenerImg implements Response.ErrorListener {
         @Override
         public void onErrorResponse(VolleyError error) {
-            Toast.makeText(Activity_Main_Nema.this, "Error", Toast.LENGTH_SHORT).show();
-        }
+
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    // Now you can use any deserializer to make sense of data
+                    JSONObject obj = new JSONObject(res);
+                } catch (UnsupportedEncodingException e1) {
+                    // Couldn't properly decode data to string
+                    e1.printStackTrace();
+                } catch (JSONException e2) {
+                    // returned data is not JSONObject?
+                    e2.printStackTrace();
+                }
+            }        }
     }
 
     private void JsonGetCategory(String result) {
