@@ -1,9 +1,29 @@
 <resources>
     <string name="app_name">Nemayman</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="navigation_drawer_open">باز کردن</string>
+    <string name="navigation_drawer_close">بستن</string>
+
+    <!-- nav -->
+    <string name="nav_header_title">نِمای من</string>
+    <string name="nav_header_subtitle">info@nemayman.com</string>
     <string name="nav_header_desc">Navigation header</string>
-    <string name="action_settings">Settings</string>
+    <string name="navFilter">فیلتر</string>
+    <string name="navSearch">جستجو</string>
+    <string name="navOurWebsite">سایت مون</string>
+    <string name="navResume">نمونه کار</string>
+    <string name="navTech">آموزش</string>
+    <string name="navSEO">بهینه سازی سایت</string>
+    <string name="navShare">به اشتراک بگذارید</string>
+    <string name="navAskQ">سوالتان را از ما برپسید</string>
+    <string name="navAboutUs">درباره ی نمای من</string>
+    <string name="navContactUs">تماس با ما</string>
+
+    <!-- item_recyc -->
+    <string name="txtTitle">عنوان</string>
+    <string name="txtDec">متن</string>
+    <string name="txtCategory">کتگوری</string>
+    <string name="btnComment">کامنت</string>
+    <string name="user">کاربر</string>
+
+
 </resources>

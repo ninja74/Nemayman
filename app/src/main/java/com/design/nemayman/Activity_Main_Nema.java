@@ -26,6 +26,8 @@ import com.design.nemayman.Models.ModPosts;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.meness.Library.Utils.IntentUtility;
+
 public class Activity_Main_Nema extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -51,8 +53,7 @@ public class Activity_Main_Nema extends AppCompatActivity
 
         // navigationView ****************************************************************
 
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -67,7 +68,7 @@ public class Activity_Main_Nema extends AppCompatActivity
 
     private void setDataOnRec() {
 
-        url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=5&&page=";
+        url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -108,10 +109,15 @@ public class Activity_Main_Nema extends AppCompatActivity
                                 conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                     @Override
                                     public void onPostResponse(List<ModPosts> response) {
-                                        for (int i = 0; i < response.size(); i++) {
-                                            data.add(response.get(i));
-                                        }
-                                        postsAdapter.notifyDataSetChanged();
+
+                                        Toast.makeText(Activity_Main_Nema.this, page+"", Toast.LENGTH_SHORT).show();
+
+//                                        for (int i = 0; i < response.size(); i++) {
+//                                            data.add(response.get(i));
+//                                        }
+//                                        postsAdapter.notifyDataSetChanged();
+
+
                                     }
                                 });
 
@@ -171,19 +177,22 @@ public class Activity_Main_Nema extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
+        if (id == R.id.nav_ourWebSite) {
+            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/");
+        } else if (id == R.id.nav_resume) {
+            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d9%86%d9%85%d9%88%d9%86%d9%87-%da%a9%d8%a7%d8%b1%d9%87%d8%a7/");
+        } else if (id == R.id.nav_teach) {
+            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%aa%d9%85%d8%a7%d8%b3-%d8%a8%d8%a7-%d9%85%d8%a7/#");
+        } else if (id == R.id.nav_seo) {
+            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/category/learning/support/");
+        } else if (id == R.id.nav_aboutUs) {
+            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%af%d8%b1%d8%a8%d8%a7%d8%b1%d9%87-%d9%86%d9%85%d8%a7%db%8c-%d9%85%d9%86/");
+        } else if (id == R.id.nav_contactUs) {
+            IntentUtility.sendEmail(Activity_Main_Nema.this, "support@nemayman.com", "درخواست پشتیبانی", "Send Email To Nemayman.com");
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            IntentUtility.share(Activity_Main_Nema.this, "http://nemayman.com/", "طراحی وبسایت", "انتخاب کنید");
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

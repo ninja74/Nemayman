@@ -11,8 +11,13 @@ public class ModPosts {
     public int idMedia;
     public String imgPostThumbnail;
     public String imgPostMedium;
-    public String imgPostFull;
+    public String postImgFullUrl;
     public int idCategory;
     public String category;
+
+    public String commentTxt;
+    public String commentAuthorName;
+    public String commentAuthorAvatarUrls;
+
 
 }

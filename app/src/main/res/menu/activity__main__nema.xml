@@ -4,7 +4,13 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/navFilter"
         android:icon="@mipmap/ic_launcher"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_settings2"
+        android:orderInCategory="100"
+        android:title="@string/navSearch"
+        android:icon="@mipmap/ic_launcher_round"
         app:showAsAction="always" />
 </menu>

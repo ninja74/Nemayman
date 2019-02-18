@@ -56,10 +56,11 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
 
 // img
-        Glide.with(context).load(posts.get(i).imgPostFull)
+        Glide.with(context).load(posts.get(i).imgPostMedium)
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.mipmap.ic_launcher_round)
                 .into(myViewHolder.imgThumb);
+
 
 // category
         myViewHolder.txtCategory.setText(posts.get(i).category);
@@ -74,6 +75,8 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
                 intent.putExtra("idPost", posts.get(i).idPost +"");
                 intent.putExtra("postTitle", posts.get(i).postTitle +"");
                 intent.putExtra("postDescription", posts.get(i).postDescription +"");
+                intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
+
                 context.startActivity(intent);
             }
         });

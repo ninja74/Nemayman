@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="7dp"
     tools:context=".Activity_Details_Nema">
 
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txtTitleDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/txtTitle"
+                android:textDirection="anyRtl" />
+
+            <ImageView
+                android:id="@+id/imgTitleDetails"
+                android:layout_width="match_parent"
+                android:layout_height="200dp" />
 
 
-</android.support.constraint.ConstraintLayout>
+            <io.github.meness.Library.HtmlTextView.HtmlTextView
+                android:id="@+id/txtDecDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textDirection="anyRtl"
+                android:text="@string/txtDec" />
+
+
+            <Button
+                android:id="@+id/btnCommentDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/btnComment" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerComment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+
+
+</LinearLayout>

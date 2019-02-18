@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardViewComment"
     android:layout_width="match_parent"
-    android:id="@+id/cardView"
-    android:layoutDirection="ltr"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
 
@@ -19,16 +18,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginRight="7dp"
             android:layout_weight="3"
             android:gravity="right|center"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/txtTitle"
+                android:id="@+id/txtNameComment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="@string/txtTitle"
+                android:text="@string/user"
                 android:textColor="#000000"
                 android:textDirection="anyRtl"
                 android:textSize="20dp"
@@ -36,7 +36,7 @@
 
 
             <io.github.meness.Library.HtmlTextView.HtmlTextView
-                android:id="@+id/txtExcerpt"
+                android:id="@+id/txtCommnet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
@@ -44,21 +44,16 @@
                 android:textDirection="anyRtl" />
 
 
-            <TextView
-                android:id="@+id/txtCategory"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/txtCategory"
-                android:textSize="10dp" />
-
         </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/imgThumb"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/imgThumbComment"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:layout_weight="7" />
+            android:layout_margin="7dp"
+            android:layout_weight="7"
+            android:src="@drawable/logonemayman" />
 
 
     </LinearLayout>

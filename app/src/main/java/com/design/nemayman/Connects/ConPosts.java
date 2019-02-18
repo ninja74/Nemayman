@@ -24,7 +24,7 @@ public class ConPosts {
     public String url;
 
 
-    public ConPosts(Context context,String url) {
+    public ConPosts(Context context, String url) {
         this.context = context;
         this.url = url;
     }
@@ -62,6 +62,7 @@ public class ConPosts {
         String postTitle = "null";
         String postDec = "null";
         String postExcerpt = "null";
+        String postImgmediumUrl = "null";
         String postImgFullUrl = "null";
         String nameCat = "null";
 
@@ -93,9 +94,13 @@ public class ConPosts {
                     JSONObject objMedia = arrayWpFeaturedmedia.getJSONObject(j);
                     JSONObject objMediaDetails = objMedia.getJSONObject("media_details");
                     JSONObject objSizes = objMediaDetails.getJSONObject("sizes");
-                    JSONObject objThumbnail = objSizes.getJSONObject("thumbnail");
-                    postImgFullUrl = objThumbnail.getString("source_url");
-//                    postImgFullUrl = objThumbnail.getString("source_url").replace("http://localhost:8080/", "http://192.168.56.1:8080/");
+                    JSONObject objThumbnail = objSizes.getJSONObject("medium");
+                    postImgmediumUrl = objThumbnail.getString("source_url");
+
+                    JSONObject objFull = objSizes.getJSONObject("full");
+                    postImgFullUrl = objFull.getString("source_url");
+
+//                    postImgmediumUrl = objThumbnail.getString("source_url").replace("http://localhost:8080/", "http://192.168.56.1:8080/");
                 }
 
                 JSONArray arrayWpTerm = object2.getJSONArray("wp:term");
@@ -113,8 +118,9 @@ public class ConPosts {
                 post.postTitle = postTitle;
                 post.postDescription = postDec;
                 post.postExcerpt = postExcerpt;
-                post.imgPostFull = postImgFullUrl;
+                post.imgPostMedium = postImgmediumUrl;
                 post.category = nameCat;
+                post.postImgFullUrl = postImgFullUrl;
 
                 posts.add(post);
             }

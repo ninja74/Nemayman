@@ -4,34 +4,41 @@
     tools:showIn="navigation_view">
 
     <group android:checkableBehavior="single">
+
         <item
-            android:id="@+id/nav_camera"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="Import" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Gallery" />
-        <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_ourWebSite"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="Slideshow" />
+            android:title="@string/navOurWebsite" />
         <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Tools" />
+            android:id="@+id/nav_resume"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/navResume" />
+        <item
+            android:id="@+id/nav_teach"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/navTech" />
+        <item
+            android:id="@+id/nav_seo"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="@string/navSEO" />
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@drawable/ic_menu_send"
+            android:title="@string/navShare" />
+
     </group>
 
-    <item android:title="Communicate">
+    <item android:title="@string/navAskQ">
         <menu>
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
+                android:id="@+id/nav_aboutUs"
                 android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:title="@string/navAboutUs" />
+            <item
+                android:id="@+id/nav_contactUs"
+                android:icon="@drawable/ic_menu_send"
+                android:title="@string/navContactUs"
+                tools:ignore="HardcodedText" />
         </menu>
     </item>
 
