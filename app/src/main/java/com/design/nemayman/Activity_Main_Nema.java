@@ -1,6 +1,7 @@
 package com.design.nemayman;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -43,6 +44,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimeZone;
 
 import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
@@ -64,14 +66,16 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
     private AlertDialog alertDialogFilters;
     private String reqDate = "";
-    private String TimeBeforFilter = "";
-    private String TimeAfterFilter = "";
+    private String dateBeforFilter = "";
+    private String dateAfterFilter = "";
     private String CategoryFilter = "";
     private TextView txtDateToFilter;
     private TextView txtDateFromFilter;
     private TagGroup tagGroupFilter;
     private List<ModPosts> modPostsCategory;
     private String Txtsearch = "";
+    private Boolean booldateBefor = false, booldateAfter = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -258,6 +262,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
                 PersianCalendar persianCalendar = new PersianCalendar();
+                persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
                         Activity_Main_Nema.this,
                         persianCalendar.getPersianYear(),
@@ -266,7 +271,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                 );
                 datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
 //                datePickerDialog.setThemeDark(true);
-                reqDate = "txtDateFrom";
+                reqDate = "txtdateBeforFilter";
             }
         });
 
@@ -275,6 +280,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
             @Override
             public void onClick(View v) {
                 PersianCalendar persianCalendar = new PersianCalendar();
+                persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
                 DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
                         Activity_Main_Nema.this,
                         persianCalendar.getPersianYear(),
@@ -315,19 +321,30 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         txtDoFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Txtsearch = "";
                 String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
 
-                if (!TimeAfterFilter.equals(""))
-                    Txtsearch += "&&after=" + TimeAfterFilter;
-                if (!TimeBeforFilter.equals(""))
-                    Txtsearch += "&&before=" + TimeBeforFilter;
+
+                String symbol = "-";
+                if (dateBeforFilter != null && dateAfterFilter != null) {
+                    if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
+                        Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
+                    } else {
+                        if (!dateAfterFilter.equals(""))
+                            Txtsearch += "&&after=" + dateAfterFilter;
+                        if (!dateBeforFilter.equals(""))
+                            Txtsearch += "&&before=" + dateBeforFilter;
+                    }
+                }
+
+
                 if (!CategoryFilter.equals(""))
                     Txtsearch += "&&categories=" + CategoryFilter;
 
                 setDataOnRec(url);
                 alertDialogFilters.dismiss();
+
+
             }
         });
 
@@ -345,16 +362,19 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
         String date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
         String symbol = "-";
 
-        if (reqDate.equals("txtDateFrom")) {
-            TimeAfterFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
+        if (reqDate.equals("txtdateBeforFilter")) {
+            dateAfterFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
             txtDateFromFilter.setText(getString(R.string.txtDateFrom) + " " + date);
         } else {
-            TimeBeforFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
+            dateBeforFilter = Utility.getGlobalData(year, monthOfYear + 1, dayOfMonth, symbol);
             txtDateToFilter.setText(getString(R.string.txtDateTo) + " " + date);
         }
 
 
     }
+
+
+
 
     private class OkResListenerImg implements Response.Listener {
         @Override
@@ -380,7 +400,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
                     // returned data is not JSONObject?
                     e2.printStackTrace();
                 }
-            }        }
+            }
+        }
     }
 
     private void JsonGetCategory(String result) {
