@@ -48,6 +48,7 @@ import java.util.TimeZone;
 import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
 import io.github.meness.Library.Utils.Utility;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class Activity_Main_Nema extends AppCompatActivity implements
         NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
@@ -75,6 +76,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private List<ModPosts> modPostsCategory;
     private String Txtsearch = "";
 
+    private MaterialProgressBar progressLoading;
+    private MaterialProgressBar progressLoadingFilter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -97,10 +101,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         try {
             setDataOnRec(url);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
-
 
     }
 
@@ -109,6 +112,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
         page = 1;
+        progressLoading.setVisibility(View.VISIBLE);
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -126,6 +130,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
                     postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
                     recyclerPosts.setAdapter(postsAdapter);
+                    progressLoading.setVisibility(View.GONE);
                     recyclerPosts.setLayoutManager(manager);
                     recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -144,6 +149,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
                             if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
+                                progressLoading.setVisibility(View.VISIBLE);
                                 isScrolling = false;
                                 page++;
                                 ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
@@ -155,7 +161,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                             data.add(response.get(i));
                                         }
                                         postsAdapter.notifyDataSetChanged();
-
+                                        progressLoading.setVisibility(View.GONE);
 
                                     }
                                 });
@@ -189,7 +195,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDateFromFilter = layoutFilter.findViewById(R.id.txtDateFromFilter);
 
         tagGroupFilter = layoutFilter.findViewById(R.id.tagGroupFilter);
+        progressLoadingFilter = layoutFilter.findViewById(R.id.progressLoadingFilter);
 
+        progressLoadingFilter.setVisibility(View.VISIBLE);
 
 // txt dismiss
         txtDismissFilter.setOnClickListener(new View.OnClickListener() {
@@ -380,8 +388,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements
             for (int j = 0; j < modPostsCategory.size(); j++)
                 listTagGP.add(modPostsCategory.get(j).nameCategoryFilter);
 
-
+            progressLoadingFilter.setVisibility(View.GONE);
             tagGroupFilter.setTags(null, listTagGP);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -466,6 +475,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         navigationView = findViewById(R.id.nav_view);
         drawer = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
+        progressLoading = findViewById(R.id.progressLoading);
     }
 
 }

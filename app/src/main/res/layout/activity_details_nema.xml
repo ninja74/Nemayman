@@ -44,6 +44,17 @@
                 android:layout_height="wrap_content"
                 android:text="@string/btnComment" />
 
+            <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+                android:id="@+id/progressLoadingComment"
+                style="@style/Widget.MaterialProgressBar.ProgressBar"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal|bottom"
+                android:indeterminate="true"
+                android:layout_weight="0.1"
+                android:visibility="gone"
+                app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
+
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recyclerComment"
                 android:layout_width="match_parent"

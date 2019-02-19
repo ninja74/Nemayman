@@ -20,6 +20,7 @@ import java.util.List;
 
 import io.github.meness.Library.HtmlTextView.HtmlHttpImageGetter;
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class Activity_Details_Nema extends AppCompatActivity {
 
@@ -30,7 +31,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
     private HtmlTextView txtDecDetails;
     private ImageView imgTitleDetails;
     private RecyclerView recyclerView;
-
+private MaterialProgressBar progressLoadingComment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 btnCommentDetails.setVisibility(View.GONE);
+                progressLoadingComment.setVisibility(View.VISIBLE);
 
                 String url = "http://nemayman.com/wp-json/wp/v2/comments?post=" + idPost;
 
@@ -71,6 +73,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
                             Toast.makeText(Activity_Details_Nema.this, response.size() + " کامنت موجود است", Toast.LENGTH_SHORT).show();
 
                         recyclerView.setVisibility(View.VISIBLE);
+                        progressLoadingComment.setVisibility(View.GONE);
                         AdRecycleComment adRecycleComment = new AdRecycleComment(Activity_Details_Nema.this, response);
                         recyclerView.setLayoutManager(new LinearLayoutManager(Activity_Details_Nema.this, LinearLayoutManager.VERTICAL, false));
                         recyclerView.setAdapter(adRecycleComment);
@@ -89,6 +92,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
         txtTitle = getIntent().getStringExtra("postTitle");
         txtDec = getIntent().getStringExtra("postDescription");
         urlImg = getIntent().getStringExtra("urlImg");
+        progressLoadingComment.setVisibility(View.GONE);
 
     }
 
@@ -98,5 +102,6 @@ public class Activity_Details_Nema extends AppCompatActivity {
         txtDecDetails = findViewById(R.id.txtDecDetails);
         imgTitleDetails = findViewById(R.id.imgTitleDetails);
         recyclerView = findViewById(R.id.recyclerComment);
+        progressLoadingComment = findViewById(R.id.progressLoadingComment);
     }
 }
