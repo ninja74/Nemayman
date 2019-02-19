@@ -111,7 +111,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
-        page = 19;
+        page = 1;
         progressLoading.setVisibility(View.VISIBLE);
 
         data = new ArrayList<>();
@@ -149,7 +149,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
                             if (dy > 0) { // know scroll down
-                                if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
+                                if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                     progressLoading.setVisibility(View.VISIBLE);
                                     isScrolling = false;
                                     page++;
