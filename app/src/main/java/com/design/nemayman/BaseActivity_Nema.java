@@ -10,7 +10,7 @@ public class BaseActivity_Nema extends Application {
     public void onCreate() {
         super.onCreate();
 
-        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/Sahel-FD.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
+        TypefaceUtil.overrideFont(getApplicationContext(), "SERIF", "fonts/IRANSansMobile.ttf"); // font from assets: "assets/fonts/Roboto-Regular.ttf
 
     }
 
