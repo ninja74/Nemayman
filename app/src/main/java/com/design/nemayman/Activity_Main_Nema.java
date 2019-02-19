@@ -1,7 +1,6 @@
 package com.design.nemayman;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -50,7 +49,8 @@ import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
 import io.github.meness.Library.Utils.Utility;
 
-public class Activity_Main_Nema extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class Activity_Main_Nema extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, DatePickerDialog.OnDateSetListener {
 
     private DrawerLayout drawer;
     private NavigationView navigationView;
@@ -74,7 +74,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
     private TagGroup tagGroupFilter;
     private List<ModPosts> modPostsCategory;
     private String Txtsearch = "";
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +103,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
 
     }
+
+// Get Data And set on RecyclerView
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;

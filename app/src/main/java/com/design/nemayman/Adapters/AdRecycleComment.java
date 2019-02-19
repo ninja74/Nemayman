@@ -39,7 +39,7 @@ public class AdRecycleComment extends RecyclerView.Adapter<AdRecycleComment.myVi
     public void onBindViewHolder(@NonNull myViewHolder myViewHolder, final int i) {
 
 // comment
-        myViewHolder.txtCommnet.setHtml(posts.get(i).commentTxt);
+        myViewHolder.txtComment.setHtml(posts.get(i).commentTxt);
 
 // comment author
         myViewHolder.txtNameComment.setText(posts.get(i).commentAuthorName);
@@ -59,14 +59,14 @@ public class AdRecycleComment extends RecyclerView.Adapter<AdRecycleComment.myVi
 
     public class myViewHolder extends RecyclerView.ViewHolder {
 
-        public HtmlTextView txtCommnet;
+        public HtmlTextView txtComment;
         public TextView txtNameComment;
         public CircleImageView imgThumbComment;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            txtCommnet = itemView.findViewById(R.id.txtCommnet);
+            txtComment = itemView.findViewById(R.id.txtComment);
             txtNameComment = itemView.findViewById(R.id.txtNameComment);
             imgThumbComment = itemView.findViewById(R.id.imgThumbComment);
 
