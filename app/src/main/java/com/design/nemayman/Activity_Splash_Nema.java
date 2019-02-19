@@ -25,6 +25,5 @@ public class Activity_Splash_Nema extends AppCompatActivity {
 
         }, 2000);
 
-
     }
 }
