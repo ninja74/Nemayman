@@ -5,4 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="ProgressBarLoadingColor">#FFD403</color>
 
+<!-- change color of Shamsi calender -->
+    <color name="mdtp_accent_color">#0AD2AD</color>
+    <color name="mdtp_accent_color_dark">#08af90</color>
+
 </resources>
