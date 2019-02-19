@@ -32,6 +32,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerInParent="true"
-        app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
+        app:mpb_indeterminateTint="@color/ProgressBarLoadingColor"
+        android:visibility="gone"/>
 
 </RelativeLayout>

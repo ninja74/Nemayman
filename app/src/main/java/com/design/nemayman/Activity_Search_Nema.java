@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.design.nemayman.Adapters.AdRecyclePosts;
+import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Connects.ConComment;
 import com.design.nemayman.Connects.ConPosts;
 import com.design.nemayman.Models.ModPosts;
@@ -27,6 +28,8 @@ import com.design.nemayman.Models.ModPosts;
 import java.util.ArrayList;
 import java.util.List;
 
+import libs.mjn.prettydialog.PrettyDialog;
+import libs.mjn.prettydialog.PrettyDialogCallback;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class Activity_Search_Nema extends AppCompatActivity {
@@ -41,9 +44,10 @@ public class Activity_Search_Nema extends AppCompatActivity {
     private Boolean isScrolling = false;
     private int currentItem, totalItems, scrollOutItems;
     private int page = 1;
-    private String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+    private String url = "";
     private String txtToSearch = "";
     private MaterialProgressBar progressLoadingSearch;
+    private checkInternet internet;
 
 
     @Override
@@ -54,6 +58,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
         findViews();
         defaults();
 
+        internet = new checkInternet(Activity_Search_Nema.this);
 
         edtSearch.addTextChangedListener(new TextWatcher() {
             @Override
@@ -81,17 +86,20 @@ public class Activity_Search_Nema extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    if (internet.CheckNetworkConnection()) {
+                        View view = Activity_Search_Nema.this.getCurrentFocus();
 
-                    View view = Activity_Search_Nema.this.getCurrentFocus();
+                        if (view != null) {
+                            InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        }
 
-                    if (view != null) {
-                        InputMethodManager manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        manager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                        txtToSearch = "&&search=" + edtSearch.getText().toString();
+                        setDataOnRec();
+                        return true;
+                    } else {
+                        CheckNet();
                     }
-
-                    txtToSearch = "&&search=" + edtSearch.getText().toString();
-                    setDataOnRec();
-                    return true;
                 }
                 return false;
             }
@@ -131,6 +139,9 @@ public class Activity_Search_Nema extends AppCompatActivity {
     }
 
     private void setDataOnRec() {
+
+        url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+        page = 1;
 
         progressLoadingSearch.setVisibility(View.VISIBLE);
         data = new ArrayList<>();
@@ -194,5 +205,20 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
     }
 
+    private void CheckNet() {
+        PrettyDialog prettyDialog = new PrettyDialog(Activity_Search_Nema.this);
+        prettyDialog.setIcon(
+                R.drawable.pdlg_icon_info,     // icon resource
+                R.color.pdlg_color_red,      // icon tint
+                new PrettyDialogCallback() {   // icon OnClick listener
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
+        prettyDialog.setTitle("خطا در ارتباط");
+        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.show();
+    }
 
 }

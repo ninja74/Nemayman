@@ -30,6 +30,7 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
     public Context context;
     public List<ModPosts> posts;
+    private checkInternet internet;
 
     public AdRecyclePosts(Context context, List<ModPosts> posts) {
         this.context = context;
@@ -45,6 +46,8 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder myViewHolder, final int i) {
+
+        internet = new checkInternet(context);
 
         try {
             // title
@@ -76,13 +79,17 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
                 myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Intent intent = new Intent(context, Activity_Details_Nema.class);
-                        intent.putExtra("idPost", posts.get(i).idPost +"");
-                        intent.putExtra("postTitle", posts.get(i).postTitle +"");
-                        intent.putExtra("postDescription", posts.get(i).postDescription +"");
-                        intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
+                        if (internet.CheckNetworkConnection()){
+                            Intent intent = new Intent(context, Activity_Details_Nema.class);
+                            intent.putExtra("idPost", posts.get(i).idPost +"");
+                            intent.putExtra("postTitle", posts.get(i).postTitle +"");
+                            intent.putExtra("postDescription", posts.get(i).postDescription +"");
+                            intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
 
-                        context.startActivity(intent);
+                            context.startActivity(intent);
+                        }else {
+                            CheckNet();
+                        }
                     }
                 });
         }catch (Exception e){

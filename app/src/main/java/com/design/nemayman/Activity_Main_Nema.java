@@ -82,6 +82,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private MaterialProgressBar progressLoading;
     private MaterialProgressBar progressLoadingFilter;
 
+    private checkInternet internet;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +98,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        internet = new checkInternet(Activity_Main_Nema.this);
 
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -103,7 +106,11 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // set Data on Recycler
         String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         try {
+            if (internet.CheckNetworkConnection()) {
                 setDataOnRec(url);
+            } else {
+                CheckNet();
+            }
         } catch (Exception e) {
 
         }
@@ -114,8 +121,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
-        page = 19;
-        progressLoading.setVisibility(View.VISIBLE);
+        page = 1;
+        progressLoading.setVisibility(View.GONE);
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -126,62 +133,68 @@ public class Activity_Main_Nema extends AppCompatActivity implements
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(final List<ModPosts> response) {
-                        if (response == null){
-                            progressLoading.setVisibility(View.GONE);
-                        }else {
-                            for (int i = 0; i < response.size(); i++) {
-                                data.add(response.get(i));
+                    if (response == null) {
+                        progressLoading.setVisibility(View.GONE);
+                    } else {
+                        for (int i = 0; i < response.size(); i++) {
+                            data.add(response.get(i));
+                        }
+
+                        postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
+                        recyclerPosts.setAdapter(postsAdapter);
+                        progressLoading.setVisibility(View.GONE);
+                        recyclerPosts.setLayoutManager(manager);
+                        recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                    isScrolling = true;
+                                }
                             }
 
-                            postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
-                            recyclerPosts.setAdapter(postsAdapter);
-                            progressLoading.setVisibility(View.GONE);
-                            recyclerPosts.setLayoutManager(manager);
-                            recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                                @Override
-                                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                                    super.onScrollStateChanged(recyclerView, newState);
-                                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                                        isScrolling = true;
-                                    }
-                                }
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                currentItem = manager.getChildCount();
+                                totalItems = manager.getItemCount();
+                                scrollOutItems = manager.findFirstVisibleItemPosition();
 
-                                @Override
-                                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                                    super.onScrolled(recyclerView, dx, dy);
-                                    currentItem = manager.getChildCount();
-                                    totalItems = manager.getItemCount();
-                                    scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                                    if (dy > 0) { // know scroll down
-                                        if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
-                                            progressLoading.setVisibility(View.VISIBLE);
-                                            isScrolling = false;
-                                            page++;
-                                            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
-                                            conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
-                                                @Override
-                                                public void onPostResponse(List<ModPosts> response) {
-
-                                                    if (response == null){
+                                if (dy > 0) { // know scroll down
+                                    if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
+                                        progressLoading.setVisibility(View.VISIBLE);
+                                        isScrolling = false;
+                                        page++;
+                                        ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
+                                        conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                                            @Override
+                                            public void onPostResponse(List<ModPosts> response) {
+                                                if (internet.CheckNetworkConnection()) {
+                                                    if (response == null) {
                                                         progressLoading.setVisibility(View.GONE);
                                                         Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
-                                                    }else {
+                                                    } else {
+
                                                         for (int i = 0; i < response.size(); i++) {
                                                             data.add(response.get(i));
-                                                        }
-                                                        postsAdapter.notifyDataSetChanged();
-                                                        progressLoading.setVisibility(View.GONE);
-                                                    }
-                                                }
-                                            });
 
-                                        }
+                                                            postsAdapter.notifyDataSetChanged();
+                                                            progressLoading.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                }else {
+                                                    CheckNet();
+                                                    progressLoading.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        });
+
                                     }
                                 }
-                            });
+                            }
+                        });
 
-                        }
+                    }
                 }
             });
         } catch (Exception e) {
@@ -223,12 +236,16 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDeleteFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Txtsearch = "";
-                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
-                setDataOnRec(url);
-                txtDateFromFilter.setText(getString(R.string.txtDateFrom));
-                txtDateToFilter.setText(getString(R.string.txtDateTo));
-                alertDialogFilters.dismiss();
+                if (internet.CheckNetworkConnection()){
+                    Txtsearch = "";
+                    String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+                    setDataOnRec(url);
+                    txtDateFromFilter.setText(getString(R.string.txtDateFrom));
+                    txtDateToFilter.setText(getString(R.string.txtDateTo));
+                    alertDialogFilters.dismiss();
+                }else {
+                    CheckNet();
+                }
             }
         });
 
@@ -236,17 +253,21 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDateFromFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PersianCalendar persianCalendar = new PersianCalendar();
-                persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
-                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                        Activity_Main_Nema.this,
-                        persianCalendar.getPersianYear(),
-                        persianCalendar.getPersianMonth(),
-                        persianCalendar.getPersianDay()
-                );
-                datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+                if (internet.CheckNetworkConnection()){
+                    PersianCalendar persianCalendar = new PersianCalendar();
+                    persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
+                    DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                            Activity_Main_Nema.this,
+                            persianCalendar.getPersianYear(),
+                            persianCalendar.getPersianMonth(),
+                            persianCalendar.getPersianDay()
+                    );
+                    datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
 //                datePickerDialog.setThemeDark(true);
-                reqDate = "txtdateBeforFilter";
+                    reqDate = "txtdateBeforFilter";
+                }else {
+                    CheckNet();
+                }
             }
         });
 
@@ -254,71 +275,84 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDateToFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PersianCalendar persianCalendar = new PersianCalendar();
-                persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
-                DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
-                        Activity_Main_Nema.this,
-                        persianCalendar.getPersianYear(),
-                        persianCalendar.getPersianMonth(),
-                        persianCalendar.getPersianDay()
-                );
-                datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
+                if (internet.CheckNetworkConnection()){
+                    PersianCalendar persianCalendar = new PersianCalendar();
+                    persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
+                    DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
+                            Activity_Main_Nema.this,
+                            persianCalendar.getPersianYear(),
+                            persianCalendar.getPersianMonth(),
+                            persianCalendar.getPersianDay()
+                    );
+                    datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
 //                datePickerDialog.setThemeDark(true);
-                reqDate = "txtDateTo";
+                    reqDate = "txtDateTo";
+                }else {
+                    CheckNet();
+                }
             }
         });
 
 // tagGP
 
-        String urlCategory = "http://nemayman.com/wp-json/wp/v2/categories?per_page=100";
+        if (internet.CheckNetworkConnection()){
+            String urlCategory = "http://nemayman.com/wp-json/wp/v2/categories?per_page=100";
 
-        RequestQueue queue = Volley.newRequestQueue(this);
-        StringRequest request = new StringRequest(Request.Method.GET, urlCategory, new OkResListenerImg(), new ErrListenerImg());
-        queue.add(request);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            StringRequest request = new StringRequest(Request.Method.GET, urlCategory, new OkResListenerImg(), new ErrListenerImg());
+            queue.add(request);
 
-        tagGroupFilter.setOnTagClickListener(new TagGroup.OnTagClickListener() {
-            @Override
-            public void onTagClick(String s) {
+            tagGroupFilter.setOnTagClickListener(new TagGroup.OnTagClickListener() {
+                @Override
+                public void onTagClick(String s) {
 
-                txtCategoriesFilter.setText(getString(R.string.txtCategories) + " " + s);
+                    txtCategoriesFilter.setText(getString(R.string.txtCategories) + " " + s);
 
-                for (int y = 0; y < modPostsCategory.size(); y++) {
-                    if (modPostsCategory.get(y).nameCategoryFilter.equals(s)) {
-                        CategoryFilter = modPostsCategory.get(y).idCategoryFilter + "";
-                        break;
+                    for (int y = 0; y < modPostsCategory.size(); y++) {
+                        if (modPostsCategory.get(y).nameCategoryFilter.equals(s)) {
+                            CategoryFilter = modPostsCategory.get(y).idCategoryFilter + "";
+                            break;
+                        }
                     }
-                }
 
-            }
-        });
+                }
+            });
+        }else {
+            CheckNet();
+        }
+
 
 // txt Do filter
         txtDoFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Txtsearch = "";
-                String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+                if (internet.CheckNetworkConnection()){
+                    Txtsearch = "";
+                    String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
 
 
-                String symbol = "-";
-                if (dateBeforFilter != null && dateAfterFilter != null) {
-                    if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
-                        Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
-                    } else {
-                        if (!dateAfterFilter.equals(""))
-                            Txtsearch += "&&after=" + dateAfterFilter;
-                        if (!dateBeforFilter.equals(""))
-                            Txtsearch += "&&before=" + dateBeforFilter;
+                    String symbol = "-";
+                    if (dateBeforFilter != null && dateAfterFilter != null) {
+                        if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
+                            Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
+                        } else {
+                            if (!dateAfterFilter.equals(""))
+                                Txtsearch += "&&after=" + dateAfterFilter;
+                            if (!dateBeforFilter.equals(""))
+                                Txtsearch += "&&before=" + dateBeforFilter;
+                        }
                     }
+
+
+                    if (!CategoryFilter.equals(""))
+                        Txtsearch += "&&categories=" + CategoryFilter;
+
+                    setDataOnRec(url);
+                    alertDialogFilters.dismiss();
+
+                }else {
+                    CheckNet();
                 }
-
-
-                if (!CategoryFilter.equals(""))
-                    Txtsearch += "&&categories=" + CategoryFilter;
-
-                setDataOnRec(url);
-                alertDialogFilters.dismiss();
-
 
             }
         });
@@ -418,25 +452,30 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_ourWebSite) {
-            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/");
-        } else if (id == R.id.nav_resume) {
-            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d9%86%d9%85%d9%88%d9%86%d9%87-%da%a9%d8%a7%d8%b1%d9%87%d8%a7/");
-        } else if (id == R.id.nav_teach) {
-            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%aa%d9%85%d8%a7%d8%b3-%d8%a8%d8%a7-%d9%85%d8%a7/#");
-        } else if (id == R.id.nav_seo) {
-            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/category/learning/support/");
-        } else if (id == R.id.nav_aboutUs) {
-            IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%af%d8%b1%d8%a8%d8%a7%d8%b1%d9%87-%d9%86%d9%85%d8%a7%db%8c-%d9%85%d9%86/");
-        } else if (id == R.id.nav_contactUs) {
-            IntentUtility.sendEmail(Activity_Main_Nema.this, "support@nemayman.com", "درخواست پشتیبانی", "Send Email To Nemayman.com");
-        } else if (id == R.id.nav_share) {
-            IntentUtility.share(Activity_Main_Nema.this, "http://nemayman.com/", "طراحی وبسایت", "انتخاب کنید");
+        if (internet.CheckNetworkConnection()){
+            if (id == R.id.nav_ourWebSite) {
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/");
+            } else if (id == R.id.nav_resume) {
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d9%86%d9%85%d9%88%d9%86%d9%87-%da%a9%d8%a7%d8%b1%d9%87%d8%a7/");
+            } else if (id == R.id.nav_teach) {
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%aa%d9%85%d8%a7%d8%b3-%d8%a8%d8%a7-%d9%85%d8%a7/#");
+            } else if (id == R.id.nav_seo) {
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/category/learning/support/");
+            } else if (id == R.id.nav_aboutUs) {
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%af%d8%b1%d8%a8%d8%a7%d8%b1%d9%87-%d9%86%d9%85%d8%a7%db%8c-%d9%85%d9%86/");
+            } else if (id == R.id.nav_contactUs) {
+                IntentUtility.sendEmail(Activity_Main_Nema.this, "support@nemayman.com", "درخواست پشتیبانی", "Send Email To Nemayman.com");
+            } else if (id == R.id.nav_share) {
+                IntentUtility.share(Activity_Main_Nema.this, "http://nemayman.com/", "طراحی وبسایت", "انتخاب کنید");
+            }
+
+
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+        }else {
+            CheckNet();
         }
 
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -454,21 +493,26 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.actionSearch) {
+        if (internet.CheckNetworkConnection()){
+            //noinspection SimplifiableIfStatement
+            if (id == R.id.actionSearch) {
 
-            Intent intent = new Intent(Activity_Main_Nema.this, Activity_Search_Nema.class);
-            startActivity(intent);
+                Intent intent = new Intent(Activity_Main_Nema.this, Activity_Search_Nema.class);
+                startActivity(intent);
 
-            return true;
-        } else if (id == R.id.actionFilter) {
-
-
-            AlertDialogFilter();
+                return true;
+            } else if (id == R.id.actionFilter) {
 
 
-            return true;
+                AlertDialogFilter();
+
+
+                return true;
+            }
+        }else {
+            CheckNet();
         }
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -491,7 +535,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     }
 
 
-    private void CheckNet(){
+    private void CheckNet() {
         PrettyDialog prettyDialog = new PrettyDialog(this);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource
