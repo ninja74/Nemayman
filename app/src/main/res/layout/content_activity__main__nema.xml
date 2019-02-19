@@ -27,4 +27,11 @@
         android:indeterminate="true"
         app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
 
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progressLoadingFirst"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
+
 </RelativeLayout>

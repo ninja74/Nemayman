@@ -77,6 +77,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private String Txtsearch = "";
 
     private MaterialProgressBar progressLoading;
+    private MaterialProgressBar progressLoadingFirst;
     private MaterialProgressBar progressLoadingFilter;
 
     @Override
@@ -112,7 +113,14 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
         page = 1;
-        progressLoading.setVisibility(View.VISIBLE);
+
+        if (page == 1) {
+            progressLoading.setVisibility(View.GONE);
+            progressLoadingFirst.setVisibility(View.VISIBLE);
+        } else {
+            progressLoading.setVisibility(View.VISIBLE);
+            progressLoadingFirst.setVisibility(View.GONE);
+        }
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -131,6 +139,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                     postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
                     recyclerPosts.setAdapter(postsAdapter);
                     progressLoading.setVisibility(View.GONE);
+                    progressLoadingFirst.setVisibility(View.GONE);
                     recyclerPosts.setLayoutManager(manager);
                     recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -158,10 +167,10 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                         @Override
                                         public void onPostResponse(List<ModPosts> response) {
 
-                                            if (response == null){
+                                            if (response == null) {
                                                 progressLoading.setVisibility(View.GONE);
                                                 Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
-                                            }else {
+                                            } else {
                                                 for (int i = 0; i < response.size(); i++) {
                                                     data.add(response.get(i));
                                                 }
@@ -481,6 +490,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         drawer = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
         progressLoading = findViewById(R.id.progressLoading);
+        progressLoadingFirst = findViewById(R.id.progressLoadingFirst);
     }
 
 }
