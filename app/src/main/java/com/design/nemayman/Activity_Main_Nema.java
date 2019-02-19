@@ -67,6 +67,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private int currentItem, totalItems, scrollOutItems;
     private int page = 1;
     private String url = "";
+    private Boolean CheckNet = false;
 
     private AlertDialog alertDialogFilters;
     private String reqDate = "";
@@ -164,7 +165,10 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                     if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                         progressLoading.setVisibility(View.VISIBLE);
                                         isScrolling = false;
-                                        page++;
+                                        if (!CheckNet){
+                                            page++;
+                                        }
+
                                         ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
                                         conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                             @Override
@@ -181,10 +185,12 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                                             postsAdapter.notifyDataSetChanged();
                                                             progressLoading.setVisibility(View.GONE);
                                                         }
+                                                        CheckNet = false;
                                                     }
                                                 }else {
                                                     CheckNet();
                                                     progressLoading.setVisibility(View.GONE);
+                                                    CheckNet = true;
                                                 }
                                             }
                                         });
