@@ -111,12 +111,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
-        page = 1;
-        if (page == 1)
-            progressLoading.setVisibility(View.GONE);
-        else
-            progressLoading.setVisibility(View.VISIBLE);
-
+        page = 20;
+        progressLoading.setVisibility(View.VISIBLE);
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -152,24 +148,31 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                             totalItems = manager.getItemCount();
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
-                            if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
-                                progressLoading.setVisibility(View.VISIBLE);
-                                isScrolling = false;
-                                page++;
-                                ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
-                                conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
-                                    @Override
-                                    public void onPostResponse(List<ModPosts> response) {
-                                        for (int i = 0; i < response.size(); i++) {
-                                            data.add(response.get(i));
+                            if (dy > 0) { // know scroll down
+                                if (isScrolling && (currentItem + scrollOutItems == totalItems)) {
+                                    progressLoading.setVisibility(View.VISIBLE);
+                                    isScrolling = false;
+                                    page++;
+                                    ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
+                                    conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                                        @Override
+                                        public void onPostResponse(List<ModPosts> response) {
+
+                                            if (response == null){
+                                                progressLoading.setVisibility(View.GONE);
+                                                Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
+                                            }else {
+                                                for (int i = 0; i < response.size(); i++) {
+                                                    data.add(response.get(i));
+                                                }
+                                                postsAdapter.notifyDataSetChanged();
+                                                progressLoading.setVisibility(View.GONE);
+                                            }
                                         }
-                                        postsAdapter.notifyDataSetChanged();
-                                        progressLoading.setVisibility(View.GONE);
-                                    }
-                                });
+                                    });
 
+                                }
                             }
-
                         }
                     });
                 }
@@ -293,7 +296,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                 String symbol = "-";
                 if (dateBeforFilter != null && dateAfterFilter != null) {
                     if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
-                        Toast.makeText(Activity_Main_Nema.this, "بازه انتخابی اشتباه است", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
                     } else {
                         if (!dateAfterFilter.equals(""))
                             Txtsearch += "&&after=" + dateAfterFilter;
