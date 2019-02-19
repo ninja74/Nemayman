@@ -15,12 +15,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.design.nemayman.Activity_Details_Nema;
+import com.design.nemayman.Activity_Main_Nema;
+import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Models.ModPosts;
 import com.design.nemayman.R;
 
 import java.util.List;
 
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
+import libs.mjn.prettydialog.PrettyDialog;
+import libs.mjn.prettydialog.PrettyDialogCallback;
 
 public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHolder> {
 
@@ -69,18 +73,18 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
 // click
 
-            myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, Activity_Details_Nema.class);
-                    intent.putExtra("idPost", posts.get(i).idPost +"");
-                    intent.putExtra("postTitle", posts.get(i).postTitle +"");
-                    intent.putExtra("postDescription", posts.get(i).postDescription +"");
-                    intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
+                myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(context, Activity_Details_Nema.class);
+                        intent.putExtra("idPost", posts.get(i).idPost +"");
+                        intent.putExtra("postTitle", posts.get(i).postTitle +"");
+                        intent.putExtra("postDescription", posts.get(i).postDescription +"");
+                        intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
 
-                    context.startActivity(intent);
-                }
-            });
+                        context.startActivity(intent);
+                    }
+                });
         }catch (Exception e){
             Log.e("errAd", e.getMessage());
         }
@@ -109,6 +113,22 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
             cardView = itemView.findViewById(R.id.cardView);
 
         }
+    }
+
+    private void CheckNet(){
+        PrettyDialog prettyDialog = new PrettyDialog(context);
+        prettyDialog.setIcon(
+                R.drawable.pdlg_icon_info,     // icon resource
+                R.color.pdlg_color_red,      // icon tint
+                new PrettyDialogCallback() {   // icon OnClick listener
+                    @Override
+                    public void onClick() {
+
+                    }
+                });
+        prettyDialog.setTitle("خطا در ارتباط");
+        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.show();
     }
 
 }

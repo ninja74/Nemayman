@@ -31,6 +31,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.design.nemayman.Adapters.AdRecyclePosts;
+import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Connects.ConPosts;
 import com.design.nemayman.Models.ModPosts;
 import com.mohamadamin.persianmaterialdatetimepicker.date.DatePickerDialog;
@@ -48,6 +49,8 @@ import java.util.TimeZone;
 import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
 import io.github.meness.Library.Utils.Utility;
+import libs.mjn.prettydialog.PrettyDialog;
+import libs.mjn.prettydialog.PrettyDialogCallback;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class Activity_Main_Nema extends AppCompatActivity implements
@@ -77,7 +80,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private String Txtsearch = "";
 
     private MaterialProgressBar progressLoading;
-    private MaterialProgressBar progressLoadingFirst;
     private MaterialProgressBar progressLoadingFilter;
 
     @Override
@@ -101,7 +103,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // set Data on Recycler
         String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         try {
-            setDataOnRec(url);
+                setDataOnRec(url);
         } catch (Exception e) {
 
         }
@@ -112,15 +114,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
-        page = 1;
-
-        if (page == 1) {
-            progressLoading.setVisibility(View.GONE);
-            progressLoadingFirst.setVisibility(View.VISIBLE);
-        } else {
-            progressLoading.setVisibility(View.VISIBLE);
-            progressLoadingFirst.setVisibility(View.GONE);
-        }
+        page = 19;
+        progressLoading.setVisibility(View.VISIBLE);
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -131,59 +126,62 @@ public class Activity_Main_Nema extends AppCompatActivity implements
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(final List<ModPosts> response) {
-
-                    for (int i = 0; i < response.size(); i++) {
-                        data.add(response.get(i));
-                    }
-
-                    postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
-                    recyclerPosts.setAdapter(postsAdapter);
-                    progressLoading.setVisibility(View.GONE);
-                    progressLoadingFirst.setVisibility(View.GONE);
-                    recyclerPosts.setLayoutManager(manager);
-                    recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                                isScrolling = true;
+                        if (response == null){
+                            progressLoading.setVisibility(View.GONE);
+                        }else {
+                            for (int i = 0; i < response.size(); i++) {
+                                data.add(response.get(i));
                             }
-                        }
 
-                        @Override
-                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
-                            currentItem = manager.getChildCount();
-                            totalItems = manager.getItemCount();
-                            scrollOutItems = manager.findFirstVisibleItemPosition();
-
-                            if (dy > 0) { // know scroll down
-                                if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
-                                    progressLoading.setVisibility(View.VISIBLE);
-                                    isScrolling = false;
-                                    page++;
-                                    ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
-                                    conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
-                                        @Override
-                                        public void onPostResponse(List<ModPosts> response) {
-
-                                            if (response == null) {
-                                                progressLoading.setVisibility(View.GONE);
-                                                Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
-                                            } else {
-                                                for (int i = 0; i < response.size(); i++) {
-                                                    data.add(response.get(i));
-                                                }
-                                                postsAdapter.notifyDataSetChanged();
-                                                progressLoading.setVisibility(View.GONE);
-                                            }
-                                        }
-                                    });
-
+                            postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
+                            recyclerPosts.setAdapter(postsAdapter);
+                            progressLoading.setVisibility(View.GONE);
+                            recyclerPosts.setLayoutManager(manager);
+                            recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                                @Override
+                                public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                    super.onScrollStateChanged(recyclerView, newState);
+                                    if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                        isScrolling = true;
+                                    }
                                 }
-                            }
+
+                                @Override
+                                public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                    super.onScrolled(recyclerView, dx, dy);
+                                    currentItem = manager.getChildCount();
+                                    totalItems = manager.getItemCount();
+                                    scrollOutItems = manager.findFirstVisibleItemPosition();
+
+                                    if (dy > 0) { // know scroll down
+                                        if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
+                                            progressLoading.setVisibility(View.VISIBLE);
+                                            isScrolling = false;
+                                            page++;
+                                            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
+                                            conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                                                @Override
+                                                public void onPostResponse(List<ModPosts> response) {
+
+                                                    if (response == null){
+                                                        progressLoading.setVisibility(View.GONE);
+                                                        Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
+                                                    }else {
+                                                        for (int i = 0; i < response.size(); i++) {
+                                                            data.add(response.get(i));
+                                                        }
+                                                        postsAdapter.notifyDataSetChanged();
+                                                        progressLoading.setVisibility(View.GONE);
+                                                    }
+                                                }
+                                            });
+
+                                        }
+                                    }
+                                }
+                            });
+
                         }
-                    });
                 }
             });
         } catch (Exception e) {
@@ -490,7 +488,22 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         drawer = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
         progressLoading = findViewById(R.id.progressLoading);
-        progressLoadingFirst = findViewById(R.id.progressLoadingFirst);
     }
 
+
+    private void CheckNet(){
+        PrettyDialog prettyDialog = new PrettyDialog(this);
+        prettyDialog.setIcon(
+                R.drawable.pdlg_icon_info,     // icon resource
+                R.color.pdlg_color_red,      // icon tint
+                new PrettyDialogCallback() {   // icon OnClick listener
+                    @Override
+                    public void onClick() {
+                        finish();
+                    }
+                });
+        prettyDialog.setTitle("خطا در ارتباط");
+        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.show();
+    }
 }
