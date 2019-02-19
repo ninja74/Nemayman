@@ -111,7 +111,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
-        page = 20;
+        page = 19;
         progressLoading.setVisibility(View.VISIBLE);
 
         data = new ArrayList<>();
