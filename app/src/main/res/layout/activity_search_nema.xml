@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="35dp"
         android:layout_margin="7dp"
+        android:id="@+id/LinearLayoutSearch"
         android:orientation="horizontal">
 
         <ImageView
@@ -49,11 +50,27 @@
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
-        android:layout_marginTop="7dp"
         android:id="@+id/recyclerSearch"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/progressLoadingSearch"
+        android:layout_below="@+id/LinearLayoutSearch"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginBottom="-40dp"
         android:scrollbars="vertical"
         android:visibility="visible" />
 
-</LinearLayout>
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
+        android:id="@+id/progressLoadingSearch"
+        style="@style/Widget.MaterialProgressBar.ProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal|bottom"
+        android:indeterminate="true"
+        app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
+
+</RelativeLayout>

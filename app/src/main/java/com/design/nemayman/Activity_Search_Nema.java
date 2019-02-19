@@ -27,6 +27,8 @@ import com.design.nemayman.Models.ModPosts;
 import java.util.ArrayList;
 import java.util.List;
 
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
+
 public class Activity_Search_Nema extends AppCompatActivity {
 
     private EditText edtSearch;
@@ -41,6 +43,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
     private int page = 1;
     private String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
     private String txtToSearch = "";
+    private MaterialProgressBar progressLoadingSearch;
 
 
     @Override
@@ -114,6 +117,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
     private void defaults() {
         imgClear.setVisibility(View.GONE);
+        progressLoadingSearch.setVisibility(View.GONE);
 
     }
 
@@ -122,12 +126,13 @@ public class Activity_Search_Nema extends AppCompatActivity {
         imgClear = findViewById(R.id.imgClear);
         imgBack = findViewById(R.id.imgBack);
         recyclerSearch = findViewById(R.id.recyclerSearch);
+        progressLoadingSearch = findViewById(R.id.progressLoadingSearch);
 
     }
 
     private void setDataOnRec() {
 
-
+        progressLoadingSearch.setVisibility(View.VISIBLE);
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -144,6 +149,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
                     postsAdapter = new AdRecyclePosts(Activity_Search_Nema.this, data);
                     recyclerSearch.setAdapter(postsAdapter);
+                    progressLoadingSearch.setVisibility(View.GONE);
                     recyclerSearch.setLayoutManager(manager);
                     recyclerSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
                         @Override
@@ -162,6 +168,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                             scrollOutItems = manager.findFirstVisibleItemPosition();
 
                             if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
+                                progressLoadingSearch.setVisibility(View.GONE);
                                 isScrolling = false;
                                 page++;
                                 ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
@@ -173,6 +180,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                                             data.add(response.get(i));
                                         }
                                         postsAdapter.notifyDataSetChanged();
+                                        progressLoadingSearch.setVisibility(View.GONE);
                                     }
                                 });
                             }
