@@ -112,7 +112,11 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
         page = 1;
-        progressLoading.setVisibility(View.VISIBLE);
+        if (page == 1)
+            progressLoading.setVisibility(View.GONE);
+        else
+            progressLoading.setVisibility(View.VISIBLE);
+
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -156,13 +160,11 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                 conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                     @Override
                                     public void onPostResponse(List<ModPosts> response) {
-
                                         for (int i = 0; i < response.size(); i++) {
                                             data.add(response.get(i));
                                         }
                                         postsAdapter.notifyDataSetChanged();
                                         progressLoading.setVisibility(View.GONE);
-
                                     }
                                 });
 
@@ -291,7 +293,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                 String symbol = "-";
                 if (dateBeforFilter != null && dateAfterFilter != null) {
                     if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
-                        Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
+                        Toast.makeText(Activity_Main_Nema.this, "بازه انتخابی اشتباه است", Toast.LENGTH_SHORT).show();
                     } else {
                         if (!dateAfterFilter.equals(""))
                             Txtsearch += "&&after=" + dateAfterFilter;
