@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,44 +41,48 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
     @Override
     public void onBindViewHolder(@NonNull myViewHolder myViewHolder, final int i) {
 
-// title
-        myViewHolder.txtTitle.setText(posts.get(i).postTitle);
+        try {
+            // title
+            myViewHolder.txtTitle.setText(posts.get(i).postTitle);
 
 // Excerpt
-        String strExcerpt = posts.get(i).postExcerpt + "";
-        String strExcerpt2 = "";
+            String strExcerpt = posts.get(i).postExcerpt + "";
+            String strExcerpt2 = "";
 // delete ادامه مطلب
-        strExcerpt = strExcerpt.replace("<span class=\"space\">&nbsp;&nbsp;</span>&nbsp;ادامه مطلب&nbsp;", "");
-        String strExcerptArr[] = strExcerpt.split(" ");
+            strExcerpt = strExcerpt.replace("<span class=\"space\">&nbsp;&nbsp;</span>&nbsp;ادامه مطلب&nbsp;", "");
+            String strExcerptArr[] = strExcerpt.split(" ");
 
-        for (int j = 0; j < 20; j++) strExcerpt2 += strExcerptArr[j] + " ";
+            for (int j = 0; j < 20; j++) strExcerpt2 += strExcerptArr[j] + " ";
 
-        myViewHolder.txtExcerpt.setHtml(strExcerpt2 + "...");
+            myViewHolder.txtExcerpt.setHtml(strExcerpt2 + "...");
 
 
 // img
-        Glide.with(context).load(posts.get(i).imgPostThumbnail)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher_round)
-                .into(myViewHolder.imgThumb);
+            Glide.with(context).load(posts.get(i).imgPostThumbnail)
+                    .placeholder(R.mipmap.ic_launcher)
+                    .error(R.mipmap.ic_launcher_round)
+                    .into(myViewHolder.imgThumb);
 
 // category
-        myViewHolder.txtCategory.setText(posts.get(i).category);
+            myViewHolder.txtCategory.setText(posts.get(i).category);
 
 // click
 
-        myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, Activity_Details_Nema.class);
-                intent.putExtra("idPost", posts.get(i).idPost +"");
-                intent.putExtra("postTitle", posts.get(i).postTitle +"");
-                intent.putExtra("postDescription", posts.get(i).postDescription +"");
-                intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
+            myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, Activity_Details_Nema.class);
+                    intent.putExtra("idPost", posts.get(i).idPost +"");
+                    intent.putExtra("postTitle", posts.get(i).postTitle +"");
+                    intent.putExtra("postDescription", posts.get(i).postDescription +"");
+                    intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
 
-                context.startActivity(intent);
-            }
-        });
+                    context.startActivity(intent);
+                }
+            });
+        }catch (Exception e){
+            Log.e("errAd", e.getMessage());
+        }
 
     }
 

@@ -97,7 +97,7 @@ public class ConPosts {
         String postTitle = "null";
         String postDec = "null";
         String postExcerpt = "null";
-        String postImgThumbnailUrl = "null";
+        String postImgmediumUrl = "null";
         String postImgFullUrl = "null";
         String nameCat = "null";
 
@@ -129,14 +129,13 @@ public class ConPosts {
                     JSONObject objMedia = arrayWpFeaturedmedia.getJSONObject(j);
                     JSONObject objMediaDetails = objMedia.getJSONObject("media_details");
                     JSONObject objSizes = objMediaDetails.getJSONObject("sizes");
-
                     JSONObject objThumbnail = objSizes.getJSONObject("thumbnail");
-                    postImgThumbnailUrl = objThumbnail.getString("source_url");
+                    postImgmediumUrl = objThumbnail.getString("source_url");
 
                     JSONObject objFull = objSizes.getJSONObject("full");
                     postImgFullUrl = objFull.getString("source_url");
 
-//                    postImgThumbnailUrl = objThumbnail.getString("source_url").replace("http://localhost:8080/", "http://192.168.56.1:8080/");
+//                    postImgmediumUrl = objThumbnail.getString("source_url").replace("http://localhost:8080/", "http://192.168.56.1:8080/");
                 }
 
                 JSONArray arrayWpTerm = object2.getJSONArray("wp:term");
@@ -154,7 +153,7 @@ public class ConPosts {
                 post.postTitle = postTitle;
                 post.postDescription = postDec;
                 post.postExcerpt = postExcerpt;
-                post.imgPostThumbnail = postImgThumbnailUrl;
+                post.imgPostMedium = postImgmediumUrl;
                 post.category = nameCat;
                 post.postImgFullUrl = postImgFullUrl;
 
@@ -163,7 +162,7 @@ public class ConPosts {
             return posts;
 
         } catch (JSONException e) {
-            Log.d("errAppWp", e.getMessage());
+            Log.d("errGet", e.getMessage());
             return null;
         }
     }

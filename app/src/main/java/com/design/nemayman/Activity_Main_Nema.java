@@ -96,7 +96,12 @@ public class Activity_Main_Nema extends AppCompatActivity implements NavigationV
 
         // set Data on Recycler
         String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
-        setDataOnRec(url);
+        try {
+            setDataOnRec(url);
+        }catch (Exception e){
+
+        }
+
 
     }
 
