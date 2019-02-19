@@ -7,23 +7,23 @@
 
         <item
             android:id="@+id/nav_ourWebSite"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_our_website"
             android:title="@string/navOurWebsite" />
         <item
             android:id="@+id/nav_resume"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_resume"
             android:title="@string/navResume" />
         <item
             android:id="@+id/nav_teach"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_tech"
             android:title="@string/navTech" />
         <item
             android:id="@+id/nav_seo"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_seo"
             android:title="@string/navSEO" />
         <item
             android:id="@+id/nav_share"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_share"
             android:title="@string/navShare" />
 
     </group>
@@ -32,11 +32,11 @@
         <menu>
             <item
                 android:id="@+id/nav_aboutUs"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_about_us"
                 android:title="@string/navAboutUs" />
             <item
                 android:id="@+id/nav_contactUs"
-                android:icon="@drawable/ic_menu_send"
+                android:icon="@drawable/ic_tab_call"
                 android:title="@string/navContactUs"
                 tools:ignore="HardcodedText" />
         </menu>

@@ -9,7 +9,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="35dp"
         android:layout_margin="7dp"
         android:orientation="horizontal">
 
@@ -17,7 +17,7 @@
             android:id="@+id/imgClear"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_menu_camera"
+            android:src="@drawable/ic_clear"
             android:layout_weight="0.1"
             android:tint="#3d3d3d" />
 
@@ -37,11 +37,12 @@
             android:layout_weight="0.6"
             android:textSize="15sp" />
 
+
         <ImageView
             android:id="@+id/imgBack"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/ic_menu_share"
+            android:src="@drawable/ic_back"
             android:layout_weight="0.1"
             android:tint="#3d3d3d" />
 
