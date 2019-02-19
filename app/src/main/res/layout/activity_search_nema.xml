@@ -22,7 +22,6 @@
             android:layout_weight="0.1"
             android:tint="#3d3d3d" />
 
-
         <EditText
             android:id="@+id/edtSearch"
             android:layout_width="wrap_content"
@@ -37,7 +36,6 @@
             android:textColorHint="#9b9b9b"
             android:layout_weight="0.6"
             android:textSize="15sp" />
-
 
         <ImageView
             android:id="@+id/imgBack"

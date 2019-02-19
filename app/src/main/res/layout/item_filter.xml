@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
@@ -12,7 +12,6 @@
         android:padding="10dp"
         android:text="@string/txtFilter"
         android:textColor="#fff" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,13 +24,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textStyle="bold"
-                android:text="@string/txtDate" />
+                android:text="@string/txtDate"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -54,9 +52,7 @@
                     android:padding="8dp"
                     android:text="@string/txtDateFrom" />
 
-
             </LinearLayout>
-
 
         </LinearLayout>
 
@@ -70,16 +66,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
-                android:textStyle="bold"
-                android:text="@string/txtCategories" />
+                android:text="@string/txtCategories"
+                android:textStyle="bold" />
 
             <io.github.meness.Library.Tag.TagGroup
                 android:id="@+id/tagGroupFilter"
                 style="@style/TagGroup"
-                android:layoutDirection="rtl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layoutDirection="rtl" />
 
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                 android:id="@+id/progressLoadingFilter"
@@ -87,23 +83,20 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal|bottom"
-                android:indeterminate="true"
                 android:layout_weight="0.1"
+                android:indeterminate="true"
                 android:visibility="gone"
                 app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
-
-
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
             android:layout_marginTop="7dp"
+            android:layout_marginBottom="20dp"
             android:orientation="horizontal"
             android:padding="8dp">
-
 
             <TextView
                 android:id="@+id/txtDismissFilter"
@@ -132,6 +125,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
 
 </LinearLayout>

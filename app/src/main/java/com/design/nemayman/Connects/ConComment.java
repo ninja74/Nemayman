@@ -20,16 +20,13 @@ import java.util.List;
 
 public class ConComment {
 
-
     public Context context;
     public String url;
-
 
     public ConComment(Context context, String url) {
         this.context = context;
         this.url = url;
     }
-
 
     public void getDataFromUrlComment(final OnPostResponseComment onPostResponse) {
 
@@ -54,7 +51,6 @@ public class ConComment {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(request);
     }
-
 
     private List<ModPosts> ParsingPostJSONComment(JSONArray response) {
 
@@ -81,8 +77,6 @@ public class ConComment {
                 JSONObject objImg = object.getJSONObject("author_avatar_urls");
                 authorAvatarUrls = objImg.getString("96");
 
-
-
                 ModPosts post = new ModPosts();
                 post.commentTxt = commentTex;
                 post.commentAuthorName = authorName;
@@ -96,7 +90,6 @@ public class ConComment {
             return null;
         }
     }
-
 
     public interface OnPostResponseComment {
         void onPostResponse(List<ModPosts> response);

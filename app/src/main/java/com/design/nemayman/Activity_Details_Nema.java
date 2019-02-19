@@ -66,7 +66,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
                     btnCommentDetails.setVisibility(View.GONE);
                     progressLoadingComment.setVisibility(View.VISIBLE);
 
-                    String url = "http://nemayman.com/wp-json/wp/v2/comments?post=" + idPost;
+                    String url = getString(R.string.urlDetailsComments) + idPost;
 
                     ConComment conComment = new ConComment(Activity_Details_Nema.this, url);
                     conComment.getDataFromUrlComment(new ConComment.OnPostResponseComment() {
@@ -74,9 +74,9 @@ public class Activity_Details_Nema extends AppCompatActivity {
                         public void onPostResponse(List<ModPosts> response) {
 
                             if (response.size() == 0)
-                                Toast.makeText(Activity_Details_Nema.this, "کامنتی وجود ندارد", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_Details_Nema.this, getString(R.string.toastDetailsNoComment), Toast.LENGTH_SHORT).show();
                             else
-                                Toast.makeText(Activity_Details_Nema.this, response.size() + " کامنت موجود است", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(Activity_Details_Nema.this, response.size() + getString(R.string.toastDetailsComment), Toast.LENGTH_SHORT).show();
 
                             recyclerView.setVisibility(View.VISIBLE);
                             progressLoadingComment.setVisibility(View.GONE);
@@ -87,7 +87,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
                         }
                     });
                 }else {
-                    CheckNet();
+                    checkNet();
                 }
             }
         });
@@ -114,8 +114,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
         progressLoadingComment = findViewById(R.id.progressLoadingComment);
     }
 
-
-    private void CheckNet() {
+    private void checkNet() {
         PrettyDialog prettyDialog = new PrettyDialog(this);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource
@@ -126,8 +125,9 @@ public class Activity_Details_Nema extends AppCompatActivity {
                         finish();
                     }
                 });
-        prettyDialog.setTitle("خطا در ارتباط");
-        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.setTitle(getString(R.string.AlertCantConnect));
+        prettyDialog.setMessage(getString(R.string.AlertCheckNetAgain));
         prettyDialog.show();
     }
+
 }

@@ -34,12 +34,10 @@ public class ConPosts {
     public Context context;
     public String url;
 
-
     public ConPosts(Context context, String url) {
         this.context = context;
         this.url = url;
     }
-
 
     public void getModPostsFromUrl(final OnPostResponse onPostResponse) {
 
@@ -68,7 +66,6 @@ public class ConPosts {
         requestQueue.add(request);
 
     }
-
 
     private List<ModPosts> ParsingPostJSON(JSONArray response) {
 
@@ -115,8 +112,6 @@ public class ConPosts {
 
                     JSONObject objFull = objSizes.getJSONObject("full");
                     postImgFullUrl = objFull.getString("source_url");
-
-//                    postImgmediumUrl = objThumbnail.getString("source_url").replace("http://localhost:8080/", "http://192.168.56.1:8080/");
                 }
 
                 JSONArray arrayWpTerm = object2.getJSONArray("wp:term");
@@ -148,10 +143,8 @@ public class ConPosts {
         }
     }
 
-
     public interface OnPostResponse {
         void onPostResponse(List<ModPosts> response);
     }
-
 
 }

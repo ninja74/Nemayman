@@ -72,4 +72,5 @@ public class AdRecycleComment extends RecyclerView.Adapter<AdRecycleComment.myVi
 
         }
     }
+
 }

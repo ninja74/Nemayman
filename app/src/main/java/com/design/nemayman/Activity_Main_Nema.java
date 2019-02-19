@@ -67,7 +67,6 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private int currentItem, totalItems, scrollOutItems;
     private int page = 1;
     private String url = "";
-    private Boolean CheckNet = false;
 
     private AlertDialog alertDialogFilters;
     private String reqDate = "";
@@ -78,12 +77,13 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private TextView txtDateFromFilter;
     private TagGroup tagGroupFilter;
     private List<ModPosts> modPostsCategory;
-    private String Txtsearch = "";
+    private String txtSearch = "";
 
     private MaterialProgressBar progressLoading;
     private MaterialProgressBar progressLoadingFilter;
 
     private checkInternet internet;
+    private Boolean boolCheckNet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,12 +105,12 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
 
         // set Data on Recycler
-        String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+        String url = getString(R.string.urlMainPosts) + "&&per_page=10&&page=";
         try {
             if (internet.CheckNetworkConnection()) {
                 setDataOnRec(url);
             } else {
-                CheckNet();
+                checkNet();
             }
         } catch (Exception e) {
 
@@ -129,7 +129,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         try {
-            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
+            ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + txtSearch);
 
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
@@ -165,18 +165,18 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                     if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                         progressLoading.setVisibility(View.VISIBLE);
                                         isScrolling = false;
-                                        if (!CheckNet){
+                                        if (!boolCheckNet) {
                                             page++;
                                         }
 
-                                        ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + Txtsearch);
+                                        ConPosts conPosts = new ConPosts(Activity_Main_Nema.this, url + page + txtSearch);
                                         conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                             @Override
                                             public void onPostResponse(List<ModPosts> response) {
                                                 if (internet.CheckNetworkConnection()) {
                                                     if (response == null) {
                                                         progressLoading.setVisibility(View.GONE);
-                                                        Toast.makeText(Activity_Main_Nema.this, "پست بیشتری وجود نداره", Toast.LENGTH_SHORT).show();
+                                                        Toast.makeText(Activity_Main_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT).show();
                                                     } else {
 
                                                         for (int i = 0; i < response.size(); i++) {
@@ -185,12 +185,12 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                                             postsAdapter.notifyDataSetChanged();
                                                             progressLoading.setVisibility(View.GONE);
                                                         }
-                                                        CheckNet = false;
+                                                        boolCheckNet = false;
                                                     }
-                                                }else {
-                                                    CheckNet();
+                                                } else {
+                                                    checkNet();
                                                     progressLoading.setVisibility(View.GONE);
-                                                    CheckNet = true;
+                                                    boolCheckNet = true;
                                                 }
                                             }
                                         });
@@ -242,15 +242,15 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDeleteFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()){
-                    Txtsearch = "";
-                    String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+                if (internet.CheckNetworkConnection()) {
+                    txtSearch = "";
+                    String url = getString(R.string.urlMainFilter) + "&&per_page=10&&page=";
                     setDataOnRec(url);
                     txtDateFromFilter.setText(getString(R.string.txtDateFrom));
                     txtDateToFilter.setText(getString(R.string.txtDateTo));
                     alertDialogFilters.dismiss();
-                }else {
-                    CheckNet();
+                } else {
+                    checkNet();
                 }
             }
         });
@@ -259,7 +259,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDateFromFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()){
+                if (internet.CheckNetworkConnection()) {
                     PersianCalendar persianCalendar = new PersianCalendar();
                     persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
                     DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
@@ -271,8 +271,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                     datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
 //                datePickerDialog.setThemeDark(true);
                     reqDate = "txtdateBeforFilter";
-                }else {
-                    CheckNet();
+                } else {
+                    checkNet();
                 }
             }
         });
@@ -281,7 +281,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDateToFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()){
+                if (internet.CheckNetworkConnection()) {
                     PersianCalendar persianCalendar = new PersianCalendar();
                     persianCalendar.setTimeZone(TimeZone.getTimeZone("GMT+3:30"));
                     DatePickerDialog datePickerDialog = DatePickerDialog.newInstance(
@@ -293,16 +293,16 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                     datePickerDialog.show(getFragmentManager(), "Datepickerdialog");
 //                datePickerDialog.setThemeDark(true);
                     reqDate = "txtDateTo";
-                }else {
-                    CheckNet();
+                } else {
+                    checkNet();
                 }
             }
         });
 
 // tagGP
 
-        if (internet.CheckNetworkConnection()){
-            String urlCategory = "http://nemayman.com/wp-json/wp/v2/categories?per_page=100";
+        if (internet.CheckNetworkConnection()) {
+            String urlCategory = getString(R.string.urlMainCategories);
 
             RequestQueue queue = Volley.newRequestQueue(this);
             StringRequest request = new StringRequest(Request.Method.GET, urlCategory, new OkResListenerImg(), new ErrListenerImg());
@@ -323,8 +323,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
                 }
             });
-        }else {
-            CheckNet();
+        } else {
+            checkNet();
         }
 
 
@@ -332,32 +332,32 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDoFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()){
-                    Txtsearch = "";
-                    String url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
+                if (internet.CheckNetworkConnection()) {
+                    txtSearch = "";
+                    String url = getString(R.string.urlMainFilter) + "&&per_page=10&&page=";
 
 
                     String symbol = "-";
                     if (dateBeforFilter != null && dateAfterFilter != null) {
                         if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
-                            Toast.makeText(getApplicationContext(), "بازه انتخابی اشتباه است", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getString(R.string.toastMainWrongDate), Toast.LENGTH_LONG).show();
                         } else {
                             if (!dateAfterFilter.equals(""))
-                                Txtsearch += "&&after=" + dateAfterFilter;
+                                txtSearch += "&&after=" + dateAfterFilter;
                             if (!dateBeforFilter.equals(""))
-                                Txtsearch += "&&before=" + dateBeforFilter;
+                                txtSearch += "&&before=" + dateBeforFilter;
                         }
                     }
 
 
                     if (!CategoryFilter.equals(""))
-                        Txtsearch += "&&categories=" + CategoryFilter;
+                        txtSearch += "&&categories=" + CategoryFilter;
 
                     setDataOnRec(url);
                     alertDialogFilters.dismiss();
 
-                }else {
-                    CheckNet();
+                } else {
+                    checkNet();
                 }
 
             }
@@ -458,28 +458,25 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (internet.CheckNetworkConnection()){
+        if (internet.CheckNetworkConnection()) {
             if (id == R.id.nav_ourWebSite) {
-                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/");
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, getString(R.string.urlNavigationOurWebSite));
             } else if (id == R.id.nav_resume) {
-                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d9%86%d9%85%d9%88%d9%86%d9%87-%da%a9%d8%a7%d8%b1%d9%87%d8%a7/");
-            } else if (id == R.id.nav_teach) {
-                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%aa%d9%85%d8%a7%d8%b3-%d8%a8%d8%a7-%d9%85%d8%a7/#");
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, getString(R.string.urlNavigationResume));
             } else if (id == R.id.nav_seo) {
-                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/category/learning/support/");
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, getString(R.string.urlNavigationSEO));
             } else if (id == R.id.nav_aboutUs) {
-                IntentUtility.browseWebsite(Activity_Main_Nema.this, "http://nemayman.com/%d8%af%d8%b1%d8%a8%d8%a7%d8%b1%d9%87-%d9%86%d9%85%d8%a7%db%8c-%d9%85%d9%86/");
+                IntentUtility.browseWebsite(Activity_Main_Nema.this, getString(R.string.urlNavigationSEO));
             } else if (id == R.id.nav_contactUs) {
-                IntentUtility.sendEmail(Activity_Main_Nema.this, "support@nemayman.com", "درخواست پشتیبانی", "Send Email To Nemayman.com");
+                IntentUtility.sendEmail(Activity_Main_Nema.this, getString(R.string.supportEmail), getString(R.string.subjectEmail), getString(R.string.titleEmail));
             } else if (id == R.id.nav_share) {
-                IntentUtility.share(Activity_Main_Nema.this, "http://nemayman.com/", "طراحی وبسایت", "انتخاب کنید");
+                IntentUtility.share(Activity_Main_Nema.this, getString(R.string.urlNavigationOurWebSite), getString(R.string.shareSubject), getString(R.string.shareTitle));
             }
-
 
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-        }else {
-            CheckNet();
+        } else {
+            checkNet();
         }
 
         return true;
@@ -499,7 +496,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (internet.CheckNetworkConnection()){
+        if (internet.CheckNetworkConnection()) {
             //noinspection SimplifiableIfStatement
             if (id == R.id.actionSearch) {
 
@@ -515,8 +512,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
 
                 return true;
             }
-        }else {
-            CheckNet();
+        } else {
+            checkNet();
         }
 
 
@@ -540,8 +537,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         progressLoading = findViewById(R.id.progressLoading);
     }
 
-
-    private void CheckNet() {
+    private void checkNet() {
         PrettyDialog prettyDialog = new PrettyDialog(this);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource
@@ -552,8 +548,9 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                         finish();
                     }
                 });
-        prettyDialog.setTitle("خطا در ارتباط");
-        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.setTitle(getString(R.string.AlertCantConnect));
+        prettyDialog.setMessage(getString(R.string.AlertCheckNetAgain));
         prettyDialog.show();
     }
+
 }

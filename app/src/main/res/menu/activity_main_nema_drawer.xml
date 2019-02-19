@@ -14,10 +14,6 @@
             android:icon="@drawable/ic_resume"
             android:title="@string/navResume" />
         <item
-            android:id="@+id/nav_teach"
-            android:icon="@drawable/ic_menu_tech"
-            android:title="@string/navTech" />
-        <item
             android:id="@+id/nav_seo"
             android:icon="@drawable/ic_menu_seo"
             android:title="@string/navSEO" />

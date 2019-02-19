@@ -64,7 +64,6 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
             myViewHolder.txtExcerpt.setHtml(strExcerpt2 + "...");
 
-
 // img
             Glide.with(context).load(posts.get(i).imgPostMedium)
                     .placeholder(R.mipmap.ic_launcher)
@@ -88,10 +87,12 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
                             context.startActivity(intent);
                         }else {
-                            CheckNet();
+                            checkNet();
                         }
                     }
                 });
+
+
         }catch (Exception e){
             Log.e("errAd", e.getMessage());
         }
@@ -122,7 +123,7 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
         }
     }
 
-    private void CheckNet(){
+    private void checkNet(){
         PrettyDialog prettyDialog = new PrettyDialog(context);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource

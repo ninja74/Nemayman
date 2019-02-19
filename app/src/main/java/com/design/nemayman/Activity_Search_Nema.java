@@ -47,8 +47,9 @@ public class Activity_Search_Nema extends AppCompatActivity {
     private String url = "";
     private String txtToSearch = "";
     private MaterialProgressBar progressLoadingSearch;
-    private checkInternet internet;
 
+    private checkInternet internet;
+    private Boolean boolCheckNet = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,10 +96,11 @@ public class Activity_Search_Nema extends AppCompatActivity {
                         }
 
                         txtToSearch = "&&search=" + edtSearch.getText().toString();
+
                         setDataOnRec();
                         return true;
                     } else {
-                        CheckNet();
+                        checkNet();
                     }
                 }
                 return false;
@@ -126,7 +128,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
     private void defaults() {
         imgClear.setVisibility(View.GONE);
         progressLoadingSearch.setVisibility(View.GONE);
-
+        url = getString(R.string.urlSearch) + "&&per_page=10&&page=";
     }
 
     private void findViews() {
@@ -139,11 +141,9 @@ public class Activity_Search_Nema extends AppCompatActivity {
     }
 
     private void setDataOnRec() {
-
-        url = "http://nemayman.com/wp-json/wp/v2/posts?_embed&&per_page=10&&page=";
         page = 1;
+        progressLoadingSearch.setVisibility(View.GONE);
 
-        progressLoadingSearch.setVisibility(View.VISIBLE);
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
@@ -153,50 +153,73 @@ public class Activity_Search_Nema extends AppCompatActivity {
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(final List<ModPosts> response) {
-
-                    for (int i = 0; i < response.size(); i++) {
-                        data.add(response.get(i));
-                    }
-
-                    postsAdapter = new AdRecyclePosts(Activity_Search_Nema.this, data);
-                    recyclerSearch.setAdapter(postsAdapter);
-                    progressLoadingSearch.setVisibility(View.GONE);
-                    recyclerSearch.setLayoutManager(manager);
-                    recyclerSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
-                        @Override
-                        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                            super.onScrollStateChanged(recyclerView, newState);
-                            if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-                                isScrolling = true;
-                            }
+                    if (response == null) {
+                        progressLoadingSearch.setVisibility(View.GONE);
+                    } else {
+                        for (int i = 0; i < response.size(); i++) {
+                            data.add(response.get(i));
                         }
 
-                        @Override
-                        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                            super.onScrolled(recyclerView, dx, dy);
-                            currentItem = manager.getChildCount();
-                            totalItems = manager.getItemCount();
-                            scrollOutItems = manager.findFirstVisibleItemPosition();
+                        postsAdapter = new AdRecyclePosts(Activity_Search_Nema.this, data);
+                        recyclerSearch.setAdapter(postsAdapter);
+                        progressLoadingSearch.setVisibility(View.GONE);
+                        recyclerSearch.setLayoutManager(manager);
+                        recyclerSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                            @Override
+                            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                                super.onScrollStateChanged(recyclerView, newState);
+                                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                                    isScrolling = true;
+                                }
+                            }
 
-                            if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
-                                progressLoadingSearch.setVisibility(View.GONE);
-                                isScrolling = false;
-                                page++;
-                                ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
-                                conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
-                                    @Override
-                                    public void onPostResponse(List<ModPosts> response) {
+                            @Override
+                            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                                super.onScrolled(recyclerView, dx, dy);
+                                currentItem = manager.getChildCount();
+                                totalItems = manager.getItemCount();
+                                scrollOutItems = manager.findFirstVisibleItemPosition();
 
-                                        for (int i = 0; i < response.size(); i++) {
-                                            data.add(response.get(i));
+                                if (dy > 0) { // know scroll down
+                                    if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
+                                        progressLoadingSearch.setVisibility(View.VISIBLE);
+                                        isScrolling = false;
+                                        if (!boolCheckNet){
+                                            page++;
                                         }
-                                        postsAdapter.notifyDataSetChanged();
-                                        progressLoadingSearch.setVisibility(View.GONE);
+
+                                        ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
+                                        conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
+                                            @Override
+                                            public void onPostResponse(List<ModPosts> response) {
+                                                if (internet.CheckNetworkConnection()) {
+                                                    if (response == null) {
+                                                        progressLoadingSearch.setVisibility(View.GONE);
+                                                        Toast.makeText(Activity_Search_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT).show();
+                                                    } else {
+
+                                                        for (int i = 0; i < response.size(); i++) {
+                                                            data.add(response.get(i));
+
+                                                            postsAdapter.notifyDataSetChanged();
+                                                            progressLoadingSearch.setVisibility(View.GONE);
+                                                        }
+                                                        boolCheckNet = false;
+                                                    }
+                                                }else {
+                                                    checkNet();
+                                                    progressLoadingSearch.setVisibility(View.GONE);
+                                                    boolCheckNet = true;
+                                                }
+                                            }
+                                        });
+
                                     }
-                                });
+                                }
                             }
-                        }
-                    });
+                        });
+
+                    }
                 }
             });
         } catch (Exception e) {
@@ -205,7 +228,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
     }
 
-    private void CheckNet() {
+    private void checkNet() {
         PrettyDialog prettyDialog = new PrettyDialog(Activity_Search_Nema.this);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource
@@ -216,8 +239,8 @@ public class Activity_Search_Nema extends AppCompatActivity {
 
                     }
                 });
-        prettyDialog.setTitle("خطا در ارتباط");
-        prettyDialog.setMessage("لطفا ارتباط خود با اینترنت را چک نمایید");
+        prettyDialog.setTitle(getString(R.string.AlertCantConnect));
+        prettyDialog.setMessage(getString(R.string.AlertCheckNetAgain));
         prettyDialog.show();
     }
 
