@@ -27,7 +27,7 @@
 
     <string name="txtDateFrom">از تاریخ:</string>
     <string name="txtDateTo">تا تاریخ:</string>
-    <string name="txtDoFilter">اعمال تغییرات</string>
+    <string name="txtDoFilter">اعمال</string>
     <string name="txtDeleteFilter">حذف فیلتر</string>
     <string name="txtDismiss">بستن</string>
     <string name="txtFilter">فیلتر کردن</string>
@@ -58,9 +58,12 @@
 
     <!-- Toast -->
     <string name="toastDetailsNoComment">کامنتی وجود ندارد</string>
-    <string name="toastDetailsComment">کامنت موجود است </string>
     <string name="toastMainNoMorePosts">پست بیشتری وجود نداره</string>
     <string name="toastMainWrongDate">بازه انتخابی اشتباه است</string>
+    <string name="toastMainChooseToFilter">لطفا یکی از موارد را انتخاب کنید</string>
     <string name="toastSplashCantConnect">خطا در برقرار ارتباط</string>
+    <string name="toastSearchFirstSearch">مورد یافت شد</string>
+    <string name="toastSearchOtherSearches">مورد دیگه یافت شد</string>
+    <string name="toastSearchNothingFound">موردی یافت نشد</string>
 
 </resources>

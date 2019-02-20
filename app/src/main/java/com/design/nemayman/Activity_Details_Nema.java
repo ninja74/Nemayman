@@ -12,13 +12,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.design.nemayman.Adapters.AdRecycleComment;
-import com.design.nemayman.Adapters.AdRecyclePosts;
 import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Connects.ConComment;
 import com.design.nemayman.Models.ModPosts;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import io.github.meness.Library.HtmlTextView.HtmlHttpImageGetter;
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
 import libs.mjn.prettydialog.PrettyDialog;
@@ -51,8 +51,8 @@ public class Activity_Details_Nema extends AppCompatActivity {
 // img title
         Glide.with(Activity_Details_Nema.this)
                 .load(urlImg)
-                .placeholder(R.mipmap.ic_launcher)
-                .error(R.mipmap.ic_launcher_round)
+                .placeholder(R.drawable.img_loading)
+                .error(R.drawable.img_failed)
                 .into(imgTitleDetails);
 
 // txtDec
@@ -62,7 +62,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
         btnCommentDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()){
+                if (internet.CheckNetworkConnection()) {
                     btnCommentDetails.setVisibility(View.GONE);
                     progressLoadingComment.setVisibility(View.VISIBLE);
 
@@ -74,9 +74,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
                         public void onPostResponse(List<ModPosts> response) {
 
                             if (response.size() == 0)
-                                Toast.makeText(Activity_Details_Nema.this, getString(R.string.toastDetailsNoComment), Toast.LENGTH_SHORT).show();
-                            else
-                                Toast.makeText(Activity_Details_Nema.this, response.size() + getString(R.string.toastDetailsComment), Toast.LENGTH_SHORT).show();
+                                Toasty.info(Activity_Details_Nema.this, getString(R.string.toastDetailsNoComment), Toast.LENGTH_SHORT, true).show();
 
                             recyclerView.setVisibility(View.VISIBLE);
                             progressLoadingComment.setVisibility(View.GONE);
@@ -86,7 +84,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
 
                         }
                     });
-                }else {
+                } else {
                     checkNet();
                 }
             }

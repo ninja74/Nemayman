@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 import com.design.nemayman.Classes.checkInternet;
 
+import es.dmoral.toasty.Toasty;
 import libs.mjn.prettydialog.PrettyDialog;
 import libs.mjn.prettydialog.PrettyDialogCallback;
 
@@ -34,7 +35,7 @@ public class Activity_Splash_Nema extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    Toast.makeText(Activity_Splash_Nema.this, getString(R.string.toastSplashCantConnect), Toast.LENGTH_SHORT).show();
+                    Toasty.error(Activity_Splash_Nema.this, getString(R.string.toastSplashCantConnect), Toast.LENGTH_SHORT, true).show();
                     txtTryAgainSplash.setVisibility(View.VISIBLE);
                 }
 
@@ -50,7 +51,7 @@ public class Activity_Splash_Nema extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else
-                    Toast.makeText(Activity_Splash_Nema.this, getString(R.string.toastSplashCantConnect), Toast.LENGTH_SHORT).show();
+                    Toasty.error(Activity_Splash_Nema.this, getString(R.string.toastSplashCantConnect), Toast.LENGTH_SHORT, true).show();
             }
         });
 

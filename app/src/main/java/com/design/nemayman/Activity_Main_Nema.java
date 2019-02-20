@@ -1,6 +1,6 @@
 package com.design.nemayman;
 
-import android.app.AlertDialog;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
 
+import es.dmoral.toasty.Toasty;
 import io.github.meness.Library.Tag.TagGroup;
 import io.github.meness.Library.Utils.IntentUtility;
 import io.github.meness.Library.Utils.Utility;
@@ -80,6 +82,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private String txtSearch = "";
 
     private MaterialProgressBar progressLoading;
+    private MaterialProgressBar progressLoadingFirst;
     private MaterialProgressBar progressLoadingFilter;
 
     private checkInternet internet;
@@ -123,7 +126,14 @@ public class Activity_Main_Nema extends AppCompatActivity implements
     private void setDataOnRec(final String urlMethod) {
         url = urlMethod;
         page = 1;
-        progressLoading.setVisibility(View.GONE);
+
+        if (page == 1) {
+            progressLoadingFirst.setVisibility(View.VISIBLE);
+            progressLoading.setVisibility(View.GONE);
+        } else {
+            progressLoadingFirst.setVisibility(View.GONE);
+            progressLoading.setVisibility(View.VISIBLE);
+        }
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
@@ -136,6 +146,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                 public void onPostResponse(final List<ModPosts> response) {
                     if (response == null) {
                         progressLoading.setVisibility(View.GONE);
+                        progressLoadingFirst.setVisibility(View.GONE);
                     } else {
                         for (int i = 0; i < response.size(); i++) {
                             data.add(response.get(i));
@@ -144,6 +155,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                         postsAdapter = new AdRecyclePosts(Activity_Main_Nema.this, data);
                         recyclerPosts.setAdapter(postsAdapter);
                         progressLoading.setVisibility(View.GONE);
+                        progressLoadingFirst.setVisibility(View.GONE);
                         recyclerPosts.setLayoutManager(manager);
                         recyclerPosts.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
@@ -176,12 +188,11 @@ public class Activity_Main_Nema extends AppCompatActivity implements
                                                 if (internet.CheckNetworkConnection()) {
                                                     if (response == null) {
                                                         progressLoading.setVisibility(View.GONE);
-                                                        Toast.makeText(Activity_Main_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT).show();
+                                                        Toasty.info(Activity_Main_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT, true).show();
                                                     } else {
 
                                                         for (int i = 0; i < response.size(); i++) {
                                                             data.add(response.get(i));
-
                                                             postsAdapter.notifyDataSetChanged();
                                                             progressLoading.setVisibility(View.GONE);
                                                         }
@@ -332,33 +343,36 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         txtDoFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (internet.CheckNetworkConnection()) {
-                    txtSearch = "";
-                    String url = getString(R.string.urlMainFilter) + "&&per_page=10&&page=";
 
 
-                    String symbol = "-";
-                    if (dateBeforFilter != null && dateAfterFilter != null) {
-                        if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
-                            Toast.makeText(getApplicationContext(), getString(R.string.toastMainWrongDate), Toast.LENGTH_LONG).show();
-                        } else {
-                            if (!dateAfterFilter.equals(""))
-                                txtSearch += "&&after=" + dateAfterFilter;
-                            if (!dateBeforFilter.equals(""))
-                                txtSearch += "&&before=" + dateBeforFilter;
+                    if (internet.CheckNetworkConnection()) {
+                        txtSearch = "";
+                        String url = getString(R.string.urlMainFilter) + "&&per_page=10&&page=";
+
+
+                        String symbol = "-";
+                        if (dateBeforFilter.equals("") && dateAfterFilter.equals("")) {
+                            if (Utility.hasPermission(dateBeforFilter, dateAfterFilter, symbol)) {
+                                Toasty.error(Activity_Main_Nema.this, getString(R.string.toastMainWrongDate), Toast.LENGTH_SHORT, true).show();
+
+                            } else {
+                                if (!dateAfterFilter.equals(""))
+                                    txtSearch += "&&after=" + dateAfterFilter;
+                                if (!dateBeforFilter.equals(""))
+                                    txtSearch += "&&before=" + dateBeforFilter;
+                            }
                         }
+
+
+                        if (!CategoryFilter.equals(""))
+                            txtSearch += "&&categories=" + CategoryFilter;
+
+                        setDataOnRec(url);
+                        alertDialogFilters.dismiss();
+
+                    } else {
+                        checkNet();
                     }
-
-
-                    if (!CategoryFilter.equals(""))
-                        txtSearch += "&&categories=" + CategoryFilter;
-
-                    setDataOnRec(url);
-                    alertDialogFilters.dismiss();
-
-                } else {
-                    checkNet();
-                }
 
             }
         });
@@ -535,6 +549,7 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         drawer = findViewById(R.id.drawer_layout);
         toolbar = findViewById(R.id.toolbar);
         progressLoading = findViewById(R.id.progressLoading);
+        progressLoadingFirst = findViewById(R.id.progressLoadingFirst);
     }
 
     private void checkNet() {

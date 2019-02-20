@@ -2,8 +2,14 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#62bdfc</color>
+
     <color name="ProgressBarLoadingColor">#FFD403</color>
+
+    <color name="colorBlack">#000000</color>
+    <color name="colorBlue">#62bdfc</color>
+    <color name="colorPurple">#8490ff</color>
+    <color name="colorWhite">#ffffff</color>
 
 <!-- change color of Shamsi calender -->
     <color name="mdtp_accent_color">#0AD2AD</color>

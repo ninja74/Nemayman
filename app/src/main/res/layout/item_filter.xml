@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/two_color_90"
         android:padding="10dp"
         android:text="@string/txtFilter"
         android:textColor="#fff" />
@@ -27,6 +27,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/round_txtview"
                 android:padding="5dp"
                 android:text="@string/txtDate"
                 android:textStyle="bold" />
@@ -40,7 +41,10 @@
                     android:id="@+id/txtDateToFilter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="0.5"
+                    android:background="@drawable/two_color_0_round"
                     android:padding="8dp"
                     android:text="@string/txtDateTo" />
 
@@ -48,7 +52,11 @@
                     android:id="@+id/txtDateFromFilter"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginBottom="5dp"
                     android:layout_weight="0.5"
+                    android:background="@drawable/two_color_0_round"
                     android:padding="8dp"
                     android:text="@string/txtDateFrom" />
 
@@ -65,6 +73,8 @@
                 android:id="@+id/txtCategoriesFilter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:background="@drawable/round_txtview"
                 android:padding="5dp"
                 android:text="@string/txtCategories"
                 android:textStyle="bold" />
@@ -74,8 +84,7 @@
                 style="@style/TagGroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layoutDirection="rtl" />
+                android:layout_marginTop="20dp" />
 
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                 android:id="@+id/progressLoadingFilter"
@@ -94,7 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="7dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="100dp"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:padding="8dp">
 
@@ -104,7 +114,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="@string/txtDismiss" />
+                android:text="@string/txtDismiss"
+                android:textColor="@color/colorBlue" />
 
             <TextView
                 android:id="@+id/txtDeleteFilter"
@@ -112,7 +123,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="@string/txtDeleteFilter" />
+                android:text="@string/txtDeleteFilter"
+                android:textColor="@color/colorBlue" />
 
             <TextView
                 android:id="@+id/txtDoFilter"
@@ -120,7 +132,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="@string/txtDoFilter" />
+                android:text="@string/txtDoFilter"
+                android:textColor="@color/colorBlue" />
 
         </LinearLayout>
 

@@ -45,9 +45,10 @@ public class AdRecycleComment extends RecyclerView.Adapter<AdRecycleComment.myVi
         myViewHolder.txtNameComment.setText(posts.get(i).commentAuthorName);
 
 // img
-        Glide.with(context).load(posts.get(i).commentAuthorAvatarUrls)
-                .placeholder(R.drawable.logonemayman)
-                .error(R.drawable.logonemayman)
+        Glide.with(context)
+                .load(posts.get(i).commentAuthorAvatarUrls)
+                .placeholder(R.drawable.img_author_comment)
+                .error(R.drawable.img_failed)
                 .into(myViewHolder.imgThumbComment);
 
     }

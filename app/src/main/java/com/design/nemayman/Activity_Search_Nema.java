@@ -28,6 +28,7 @@ import com.design.nemayman.Models.ModPosts;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import libs.mjn.prettydialog.PrettyDialog;
 import libs.mjn.prettydialog.PrettyDialogCallback;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
@@ -47,6 +48,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
     private String url = "";
     private String txtToSearch = "";
     private MaterialProgressBar progressLoadingSearch;
+    private MaterialProgressBar progressLoadingSearchFirst;
 
     private checkInternet internet;
     private Boolean boolCheckNet = false;
@@ -137,25 +139,43 @@ public class Activity_Search_Nema extends AppCompatActivity {
         imgBack = findViewById(R.id.imgBack);
         recyclerSearch = findViewById(R.id.recyclerSearch);
         progressLoadingSearch = findViewById(R.id.progressLoadingSearch);
+        progressLoadingSearchFirst = findViewById(R.id.progressLoadingSearchFirst);
 
     }
 
     private void setDataOnRec() {
         page = 1;
-        progressLoadingSearch.setVisibility(View.GONE);
+
+        if (page == 1) {
+            progressLoadingSearch.setVisibility(View.GONE);
+            progressLoadingSearchFirst.setVisibility(View.VISIBLE);
+        } else {
+            progressLoadingSearch.setVisibility(View.VISIBLE);
+            progressLoadingSearchFirst.setVisibility(View.GONE);
+        }
+
 
         data = new ArrayList<>();
         manager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
         try {
-            ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
 
+            ConPosts conPosts = new ConPosts(Activity_Search_Nema.this, url + page + txtToSearch);
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(final List<ModPosts> response) {
                     if (response == null) {
+
                         progressLoadingSearch.setVisibility(View.GONE);
+                        progressLoadingSearchFirst.setVisibility(View.GONE);
+                        Toasty.info(Activity_Search_Nema.this, getString(R.string.toastSearchNothingFound), Toast.LENGTH_SHORT, true).show();
+
+
                     } else {
+
+                        if (response.size() == 0)
+                            Toasty.info(Activity_Search_Nema.this, getString(R.string.toastSearchNothingFound), Toast.LENGTH_SHORT, true).show();
+
                         for (int i = 0; i < response.size(); i++) {
                             data.add(response.get(i));
                         }
@@ -163,6 +183,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                         postsAdapter = new AdRecyclePosts(Activity_Search_Nema.this, data);
                         recyclerSearch.setAdapter(postsAdapter);
                         progressLoadingSearch.setVisibility(View.GONE);
+                        progressLoadingSearchFirst.setVisibility(View.GONE);
                         recyclerSearch.setLayoutManager(manager);
                         recyclerSearch.addOnScrollListener(new RecyclerView.OnScrollListener() {
                             @Override
@@ -176,6 +197,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                             @Override
                             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                                 super.onScrolled(recyclerView, dx, dy);
+
                                 currentItem = manager.getChildCount();
                                 totalItems = manager.getItemCount();
                                 scrollOutItems = manager.findFirstVisibleItemPosition();
@@ -184,7 +206,7 @@ public class Activity_Search_Nema extends AppCompatActivity {
                                     if (isScrolling && (currentItem + scrollOutItems == totalItems) && response.size() == 10) {
                                         progressLoadingSearch.setVisibility(View.VISIBLE);
                                         isScrolling = false;
-                                        if (!boolCheckNet){
+                                        if (!boolCheckNet) {
                                             page++;
                                         }
 
@@ -192,10 +214,12 @@ public class Activity_Search_Nema extends AppCompatActivity {
                                         conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                                             @Override
                                             public void onPostResponse(List<ModPosts> response) {
+
                                                 if (internet.CheckNetworkConnection()) {
                                                     if (response == null) {
                                                         progressLoadingSearch.setVisibility(View.GONE);
-                                                        Toast.makeText(Activity_Search_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT).show();
+                                                        Toasty.info(Activity_Search_Nema.this, getString(R.string.toastMainNoMorePosts), Toast.LENGTH_SHORT, true).show();
+
                                                     } else {
 
                                                         for (int i = 0; i < response.size(); i++) {
@@ -206,10 +230,12 @@ public class Activity_Search_Nema extends AppCompatActivity {
                                                         }
                                                         boolCheckNet = false;
                                                     }
-                                                }else {
+                                                } else {
+
                                                     checkNet();
                                                     progressLoadingSearch.setVisibility(View.GONE);
                                                     boolCheckNet = true;
+
                                                 }
                                             }
                                         });

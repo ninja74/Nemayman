@@ -29,6 +29,8 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:3.7.0'
     implementation 'de.hdodenhof:circleimageview:2.1.0'
     implementation 'me.zhanghai.android.materialprogressbar:library:1.4.1'
+    implementation 'com.github.mjn1369:PrettyDialog:1.0.4'
+    implementation 'com.github.GrenderG:Toasty:1.4.0'
     debugImplementation('com.mohamadamin:persianmaterialdatetimepicker:1.2.1') {
         exclude group: 'com.design.nemayman'
         exclude module: 'appcompat-v7'
@@ -38,5 +40,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation project(':NemaymanLib')
-    implementation 'com.github.mjn1369:PrettyDialog:1.0.4'
+
 }

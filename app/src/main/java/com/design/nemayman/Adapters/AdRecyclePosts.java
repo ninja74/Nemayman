@@ -11,11 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.design.nemayman.Activity_Details_Nema;
-import com.design.nemayman.Activity_Main_Nema;
 import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Models.ModPosts;
 import com.design.nemayman.R;
@@ -65,9 +62,10 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
             myViewHolder.txtExcerpt.setHtml(strExcerpt2 + "...");
 
 // img
-            Glide.with(context).load(posts.get(i).imgPostMedium)
-                    .placeholder(R.mipmap.ic_launcher)
-                    .error(R.mipmap.ic_launcher_round)
+            Glide.with(context)
+                    .load(posts.get(i).imgPostMedium)
+                    .placeholder(R.drawable.img_loading)
+                    .error(R.drawable.img_failed)
                     .into(myViewHolder.imgThumb);
 
 // category
@@ -75,25 +73,25 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
 
 // click
 
-                myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (internet.CheckNetworkConnection()){
-                            Intent intent = new Intent(context, Activity_Details_Nema.class);
-                            intent.putExtra("idPost", posts.get(i).idPost +"");
-                            intent.putExtra("postTitle", posts.get(i).postTitle +"");
-                            intent.putExtra("postDescription", posts.get(i).postDescription +"");
-                            intent.putExtra("urlImg", posts.get(i).postImgFullUrl +"");
+            myViewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (internet.CheckNetworkConnection()) {
+                        Intent intent = new Intent(context, Activity_Details_Nema.class);
+                        intent.putExtra("idPost", posts.get(i).idPost + "");
+                        intent.putExtra("postTitle", posts.get(i).postTitle + "");
+                        intent.putExtra("postDescription", posts.get(i).postDescription + "");
+                        intent.putExtra("urlImg", posts.get(i).postImgFullUrl + "");
 
-                            context.startActivity(intent);
-                        }else {
-                            checkNet();
-                        }
+                        context.startActivity(intent);
+                    } else {
+                        checkNet();
                     }
-                });
+                }
+            });
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e("errAd", e.getMessage());
         }
 
@@ -123,7 +121,7 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
         }
     }
 
-    private void checkNet(){
+    private void checkNet() {
         PrettyDialog prettyDialog = new PrettyDialog(context);
         prettyDialog.setIcon(
                 R.drawable.pdlg_icon_info,     // icon resource
