@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#62bdfc</color>
 
-    <color name="ProgressBarLoadingColor">#303F9F</color>
+    <color name="ProgressBarLoadingColor">@color/colorPurple</color>
 
     <color name="colorBlack">#000000</color>
     <color name="colorBlue">#62bdfc</color>
