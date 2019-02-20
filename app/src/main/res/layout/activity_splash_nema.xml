@@ -6,9 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".Activity_Splash_Nema">
 
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/logoSplash"
+        android:layout_centerInParent="true"
+        android:src="@drawable/logonemayman" />
+
     <me.zhanghai.android.materialprogressbar.MaterialProgressBar
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/logoSplash"
+        android:layout_centerHorizontal="true"
         app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
 
     <TextView
