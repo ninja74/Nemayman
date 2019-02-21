@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+     android:orientation="vertical">
 
     <TextView
         android:layout_width="match_parent"
@@ -82,6 +82,7 @@
             <io.github.meness.Library.Tag.TagGroup
                 android:id="@+id/tagGroupFilter"
                 style="@style/TagGroup"
+                app:atg_textSize="@dimen/pdlg_space_1.0x"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp" />
