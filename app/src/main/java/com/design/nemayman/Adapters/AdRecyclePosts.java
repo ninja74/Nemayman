@@ -11,11 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.design.nemayman.R;
+
 import com.bumptech.glide.Glide;
 import com.design.nemayman.Activity_Details_Nema;
 import com.design.nemayman.Classes.checkInternet;
 import com.design.nemayman.Models.ModPosts;
-import com.design.nemayman.R;
 
 import java.util.List;
 
@@ -117,6 +119,8 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
             txtCategory = itemView.findViewById(R.id.txtCategory);
             txtExcerpt = itemView.findViewById(R.id.txtExcerpt);
             cardView = itemView.findViewById(R.id.cardView);
+
+
 
         }
     }
