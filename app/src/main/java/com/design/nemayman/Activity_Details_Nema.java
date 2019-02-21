@@ -19,7 +19,6 @@ import com.design.nemayman.R;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
-import in.shadowfax.proswipebutton.ProSwipeButton;
 import io.github.meness.Library.HtmlTextView.HtmlHttpImageGetter;
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
 import libs.mjn.prettydialog.PrettyDialog;

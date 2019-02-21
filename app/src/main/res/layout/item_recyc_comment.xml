@@ -23,13 +23,14 @@
 
             <TextView
                 android:id="@+id/txtNameComment"
+                android:text="@string/user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="@string/user"
+                android:maxLines="2"
                 android:textColor="#000000"
                 android:textDirection="anyRtl"
-                android:textSize="20dp"
+                android:textSize="@dimen/mdtp_year_label_text_size"
                 android:textStyle="bold" />
 
             <io.github.meness.Library.HtmlTextView.HtmlTextView
@@ -37,6 +38,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:maxLines="3"
+                android:textSize="@dimen/pdlg_space_1.0x"
                 android:text="@string/txtDec"
                 android:textDirection="anyRtl" />
 
@@ -45,7 +48,7 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/imgThumbComment"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="match_parent"
             android:layout_margin="7dp"
             android:layout_weight="7"
             android:src="@drawable/img_loading" />
