@@ -24,6 +24,7 @@ import io.github.meness.Library.HtmlTextView.HtmlHttpImageGetter;
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
 import libs.mjn.prettydialog.PrettyDialog;
 import libs.mjn.prettydialog.PrettyDialogCallback;
+import life.sabujak.roundedbutton.RoundedButton;
 import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 
 public class Activity_Details_Nema extends AppCompatActivity {
@@ -36,7 +37,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
     private RecyclerView recyclerView;
     private checkInternet internet;
     private MaterialProgressBar progressLoadingComment;
-    private ProSwipeButton btnCommentDetails;
+    private RoundedButton btnCommentDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,10 +62,10 @@ public class Activity_Details_Nema extends AppCompatActivity {
 
 // Comment
 
-        btnCommentDetails.setOnSwipeListener(new ProSwipeButton.OnSwipeListener() {
-            @Override
-            public void onSwipeConfirm() {
 
+        btnCommentDetails.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
                 if (internet.CheckNetworkConnection()) {
                     btnCommentDetails.setVisibility(View.GONE);
                     progressLoadingComment.setVisibility(View.VISIBLE);
@@ -90,9 +91,9 @@ public class Activity_Details_Nema extends AppCompatActivity {
                 } else {
                     checkNet();
                 }
-                btnCommentDetails.showResultIcon(true);
             }
         });
+
 
     }
 

@@ -37,13 +37,18 @@
                 android:textDirection="anyRtl" />
 
 
-            <in.shadowfax.proswipebutton.ProSwipeButton
+            <life.sabujak.roundedbutton.RoundedButton
                 android:id="@+id/btnCommentDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                app:bg_color="@android:color/holo_blue_dark"
-                app:btn_text="@string/btnComment" />
+                android:gravity="center"
+                android:padding="15dp"
+                android:layout_margin="10dp"
+                android:text="@string/btnComment"
+                android:textColor="#ffffff"
+                app:buttonGradientStartColor="@color/colorPrimary"
+                app:buttonGradientEndColor="@color/colorAccent"
+                app:buttonCornerRadius="5dp" />
 
 
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
