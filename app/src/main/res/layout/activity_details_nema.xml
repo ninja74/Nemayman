@@ -21,8 +21,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/txtTitle"
-                android:textSize="@dimen/mdtp_year_label_text_size"
-                android:textDirection="anyRtl" />
+                android:textDirection="anyRtl"
+                android:textSize="@dimen/mdtp_year_label_text_size" />
 
             <ImageView
                 android:id="@+id/imgTitleDetails"
@@ -33,14 +33,18 @@
                 android:id="@+id/txtDecDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textDirection="anyRtl"
-                android:text="@string/txtDec" />
+                android:text="@string/txtDec"
+                android:textDirection="anyRtl" />
 
-            <Button
+
+            <in.shadowfax.proswipebutton.ProSwipeButton
                 android:id="@+id/btnCommentDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/btnComment" />
+                android:layout_margin="8dp"
+                app:bg_color="@android:color/holo_blue_dark"
+                app:btn_text="@string/btnComment" />
+
 
             <me.zhanghai.android.materialprogressbar.MaterialProgressBar
                 android:id="@+id/progressLoadingComment"
@@ -48,8 +52,8 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal|bottom"
-                android:indeterminate="true"
                 android:layout_weight="0.1"
+                android:indeterminate="true"
                 android:visibility="gone"
                 app:mpb_indeterminateTint="@color/ProgressBarLoadingColor" />
 

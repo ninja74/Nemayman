@@ -1,11 +1,10 @@
 package com.design.nemayman;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +18,7 @@ import com.design.nemayman.Models.ModPosts;
 import java.util.List;
 
 import es.dmoral.toasty.Toasty;
+import in.shadowfax.proswipebutton.ProSwipeButton;
 import io.github.meness.Library.HtmlTextView.HtmlHttpImageGetter;
 import io.github.meness.Library.HtmlTextView.HtmlTextView;
 import libs.mjn.prettydialog.PrettyDialog;
@@ -30,12 +30,12 @@ public class Activity_Details_Nema extends AppCompatActivity {
 
     private String idPost = "", txtTitle = "", txtDec = "", urlImg = "";
     private TextView txtTitleDetails;
-    private Button btnCommentDetails;
     private HtmlTextView txtDecDetails;
     private ImageView imgTitleDetails;
     private RecyclerView recyclerView;
     private checkInternet internet;
     private MaterialProgressBar progressLoadingComment;
+    private ProSwipeButton btnCommentDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +59,11 @@ public class Activity_Details_Nema extends AppCompatActivity {
         txtDecDetails.setHtml(txtDec, new HtmlHttpImageGetter(txtDecDetails));
 
 // Comment
-        btnCommentDetails.setOnClickListener(new View.OnClickListener() {
+
+        btnCommentDetails.setOnSwipeListener(new ProSwipeButton.OnSwipeListener() {
             @Override
-            public void onClick(View v) {
+            public void onSwipeConfirm() {
+
                 if (internet.CheckNetworkConnection()) {
                     btnCommentDetails.setVisibility(View.GONE);
                     progressLoadingComment.setVisibility(View.VISIBLE);
@@ -87,9 +89,9 @@ public class Activity_Details_Nema extends AppCompatActivity {
                 } else {
                     checkNet();
                 }
+                btnCommentDetails.showResultIcon(true);
             }
         });
-
 
     }
 
@@ -105,11 +107,11 @@ public class Activity_Details_Nema extends AppCompatActivity {
 
     private void findViews() {
         txtTitleDetails = findViewById(R.id.txtTitleDetails);
-        btnCommentDetails = findViewById(R.id.btnCommentDetails);
         txtDecDetails = findViewById(R.id.txtDecDetails);
         imgTitleDetails = findViewById(R.id.imgTitleDetails);
         recyclerView = findViewById(R.id.recyclerComment);
         progressLoadingComment = findViewById(R.id.progressLoadingComment);
+        btnCommentDetails = findViewById(R.id.btnCommentDetails);
     }
 
     private void checkNet() {
