@@ -60,6 +60,7 @@ public class AdRecyclePosts extends RecyclerView.Adapter<AdRecyclePosts.myViewHo
             String strExcerptArr[] = strExcerpt.split(" ");
 
             for (int j = 0; j < 20; j++) strExcerpt2 += strExcerptArr[j] + " ";
+            strExcerpt2 = strExcerpt2.replaceAll("<a(.*?)\\>", " ");
 
             myViewHolder.txtExcerpt.setHtml(strExcerpt2 + "...");
 
