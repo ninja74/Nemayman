@@ -1,14 +1,15 @@
 package com.design.nemayman;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.design.nemayman.Classes.checkInternet;
+import com.medialablk.easygifview.EasyGifView;
 
 import es.dmoral.toasty.Toasty;
 import libs.mjn.prettydialog.PrettyDialog;
@@ -26,6 +27,10 @@ public class Activity_Splash_Nema extends AppCompatActivity {
         findViews();
         setdefault();
         internet = new checkInternet(Activity_Splash_Nema.this);
+
+        EasyGifView easyGifView = (EasyGifView) findViewById(R.id.easyGifView);
+        easyGifView.setGifFromResource(R.drawable.nemaymanlogo);
+
 
         new Handler().postDelayed(new Runnable() {
             @Override

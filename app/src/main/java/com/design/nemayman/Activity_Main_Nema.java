@@ -144,6 +144,8 @@ public class Activity_Main_Nema extends AppCompatActivity implements
             conPosts.getModPostsFromUrl(new ConPosts.OnPostResponse() {
                 @Override
                 public void onPostResponse(final List<ModPosts> response) {
+
+
                     if (response == null) {
                         progressLoading.setVisibility(View.GONE);
                         progressLoadingFirst.setVisibility(View.GONE);
@@ -219,6 +221,17 @@ public class Activity_Main_Nema extends AppCompatActivity implements
         }
 
     }
+
+
+//    public static String removeHTML(String htmlString)
+//    {
+//        // Remove HTML tag from java String
+//        String noHTMLString = htmlString.replaceAll("<a(.*?)\\>", " ");
+//        return noHTMLString;
+//
+//    }
+
+
 
 // Start AlertDialogFilter
 

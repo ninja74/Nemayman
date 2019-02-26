@@ -59,6 +59,7 @@ public class Activity_Details_Nema extends AppCompatActivity {
 // txtDec
         txtDecDetails.setHtml(txtDec, new HtmlHttpImageGetter(txtDecDetails));
 
+
 // Comment
 
 
