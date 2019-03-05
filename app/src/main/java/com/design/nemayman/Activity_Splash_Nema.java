@@ -9,11 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.design.nemayman.Classes.checkInternet;
-import com.medialablk.easygifview.EasyGifView;
 
 import es.dmoral.toasty.Toasty;
 import libs.mjn.prettydialog.PrettyDialog;
 import libs.mjn.prettydialog.PrettyDialogCallback;
+import pl.droidsonroids.gif.GifImageView;
 
 public class Activity_Splash_Nema extends AppCompatActivity {
 
@@ -28,8 +28,8 @@ public class Activity_Splash_Nema extends AppCompatActivity {
         setdefault();
         internet = new checkInternet(Activity_Splash_Nema.this);
 
-        EasyGifView easyGifView = (EasyGifView) findViewById(R.id.easyGifView);
-        easyGifView.setGifFromResource(R.drawable.nemaymanlogo);
+        GifImageView easyGifView = (GifImageView) findViewById(R.id.easyGifView);
+        easyGifView.setImageResource(R.drawable.nema);
 
 
         new Handler().postDelayed(new Runnable() {
